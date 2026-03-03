@@ -1,145 +1,93 @@
-:root {
-  --bg: #f4f6f9;
-  --card: #ffffff;
-  --border: #e5e7eb;
-  --primary: #1d4ed8;
-  --danger: #dc2626;
-  --success: #16a34a;
-  --warning: #f59e0b;
-  --text: #1f2937;
-}
-
 body {
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background: linear-gradient(to right, #eef2f7, #f9fbfd);
 }
 
-header {
-  background: white;
-  padding: 20px 30px;
-  border-bottom: 1px solid var(--border);
+.nav {
+  background: #0f172a;
+  color: white;
+  padding: 18px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-align: center;
 }
 
 .container {
-  padding: 30px;
-  max-width: 1200px;
-  margin: auto;
+  max-width: 950px;
+  margin: 30px auto;
+  padding: 20px;
 }
 
 .card {
-  background: var(--card);
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  background: white;
+  padding: 25px;
   margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+h3 {
+  margin-top: 0;
+  color: #1e293b;
+  border-left: 5px solid #2563eb;
+  padding-left: 10px;
+}
+
+label {
+  font-weight: 600;
+  color: #334155;
 }
 
 input, select, textarea {
   width: 100%;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-
-button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-primary { background: var(--primary); color: white; }
-.btn-danger { background: var(--danger); color: white; }
-.btn-success { background: var(--success); color: white; }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
   padding: 10px;
-  border: 1px solid var(--border);
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  margin-top: 5px;
+  margin-bottom: 15px;
   font-size: 14px;
 }
 
-th { background: #f1f5f9; }
-
-.badge {
-  padding: 4px 8px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 4px rgba(37,99,235,0.4);
 }
 
-.new { background: #dbeafe; color: #1d4ed8; }
-.in-progress { background: #fef3c7; color: #92400e; }
-.completed { background: #dcfce7; color: #166534; }
-.rejected { background: #fee2e2; color: #991b1b; }
-
-@media print {
-  header, button { display: none; }
-}
-/* Improve form spacing */
-.card label {
-  display: block;
-  margin-top: 12px;
-  font-weight: 600;
-}
-
-.card select,
-.card textarea,
-.card input {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
+button {
+  padding: 10px 18px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.card textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-/* Checklist section styling */
-.card h3 {
-  margin-top: 20px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 5px;
-}
-
-/* Print styling */
-@media print {
-  button, select {
-    display: none;
-  }
-
-  body {
-    background: white;
-  }
-
-  .card {
-    box-shadow: none;
-    border: none;
-  }
-}
-.nav {
-  background: #222;
-  padding: 10px;
-}
-
-.nav a {
+.approve {
+  background: #16a34a;
   color: white;
-  margin-right: 15px;
-  text-decoration: none;
-  font-weight: bold;
 }
 
-.nav a:hover {
-  text-decoration: underline;
+.approve:hover {
+  background: #15803d;
+}
+
+.reject {
+  background: #dc2626;
+  color: white;
+}
+
+.reject:hover {
+  background: #b91c1c;
+}
+
+.approvalSection {
+  display: none;
 }
