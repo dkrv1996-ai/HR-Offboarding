@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Finance Approval</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <h2>Finance Department - Clearance</h2>
+</header>
+
+<div class="container">
+<div class="card">
+
+<label>Select Request</label>
+<select id="reqSelect"></select>
+
+<div id="details"></div>
+
+<h3>Finance Clearance Details</h3>
+
+<label>Any Due Amount?</label>
+<select id="dueAmount">
+  <option value="No Due">No Due</option>
+  <option value="Pending Due">Pending Due</option>
+</select>
+
+<label>Full & Final Settlement Completed?</label>
+<select id="settlement">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
+
+<label>Finance Comments</label>
+<textarea id="comment" placeholder="Enter finance remarks"></textarea>
+
+<br>
+<button onclick="approve()" class="btn-success">Approve</button>
+<button onclick="reject()" class="btn-danger">Reject</button>
+
+</div>
+</div>
+
+<script>
+const ROLE = "Finance";
+</script>
+
+<script src="js/storage.js"></script>
+<script src="js/workflow.js"></script>
+<script src="js/approval.js"></script>
+
+</body>
+</html>
