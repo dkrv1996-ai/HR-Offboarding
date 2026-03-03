@@ -16,17 +16,29 @@ function approve() {
   const data = loadRequests();
   const req = data.find(r => r.id === id);
 
-  req.approvals[req.currentStep].status = "approved";
-  req.approvals[req.currentStep].comment = comment.value;
-  req.approvals[req.currentStep].actionDate = new Date().toLocaleString();
+  const approval = req.approvals[req.currentStep];
+
+  approval.status = "approved";
+  approval.comment = comment.value;
+  approval.actionDate = new Date().toLocaleString();
+
+  // Store department extra data
+  approval.extraData = {};
+
+  document.querySelectorAll("select").forEach(sel => {
+    if (sel.id !== "reqSelect") {
+      approval.extraData[sel.id] = sel.value;
+    }
+  });
 
   req.currentStep++;
   req.status = req.currentStep === FLOW.length ? "completed" : "in-progress";
 
   saveRequests(data);
-  alert("Approved");
+  alert("Approved Successfully");
   loadPending();
 }
+
 
 function reject() {
   const id = reqSelect.value;
