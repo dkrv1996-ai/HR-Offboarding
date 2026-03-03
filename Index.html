@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HR Offboarding Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <h2>Offboarding Request System</h2>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h3>Create Request</h3>
+<form id="form">
+<input placeholder="Employee Name" id="name" required>
+<input placeholder="Employee ID" id="empId" required>
+<input placeholder="Department" id="dept" required>
+<input type="date" id="lwd" required>
+<textarea placeholder="Reason" id="reason" required></textarea>
+<button class="btn-primary">Submit</button>
+</form>
+</div>
+
+<div class="card">
+<h3>Dashboard</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Status</th>
+<th>Pending With</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="body"></tbody>
+</table>
+</div>
+
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/workflow.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Manager Approval</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header><h2>Manager Approval Panel</h2></header>
+
+<div class="container">
+<div class="card">
+
+<select id="reqSelect"></select>
+<div id="details"></div>
+<textarea id="comment" placeholder="Enter Comment"></textarea>
+<button onclick="approve()" class="btn-success">Approve</button>
+<button onclick="reject()" class="btn-danger">Reject</button>
+
+</div>
+</div>
+
+<script>
+const ROLE = "Manager";
+</script>
+
+<script src="js/storage.js"></script>
+<script src="js/workflow.js"></script>
+<script src="js/approval.js"></script>
+</body>
+</html>
