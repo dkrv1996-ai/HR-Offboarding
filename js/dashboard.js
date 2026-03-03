@@ -8,7 +8,6 @@ document.getElementById("form").addEventListener("submit", function(e){
     lwd: lwd.value,
     reason: reason.value
   });
-
   this.reset();
   render();
 });
@@ -40,3 +39,4 @@ function del(id){
 }
 
 render();
+
