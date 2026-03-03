@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Final HR Closure</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <h2>Final HR Closure</h2>
+</header>
+
+<div class="container">
+<div class="card">
+
+<label>Select Request</label>
+<select id="reqSelect"></select>
+
+<div id="details"></div>
+
+<h3>Final HR Checklist</h3>
+
+<label>Exit Interview Completed?</label>
+<select id="exitInterview">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
+
+<label>Company Documents Collected?</label>
+<select id="docsCollected">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
+
+<label>Experience Letter Issued?</label>
+<select id="expLetter">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
+
+<label>Final HR Remarks</label>
+<textarea id="comment" placeholder="Enter final remarks"></textarea>
+
+<br>
+<button onclick="approve()" class="btn-success">Complete & Close</button>
+<button onclick="reject()" class="btn-danger">Reject</button>
+
+</div>
+</div>
+
+<script>
+const ROLE = "Final HR";
+</script>
+
+<script src="js/storage.js"></script>
+<script src="js/workflow.js"></script>
+<script src="js/approval.js"></script>
+
+</body>
+</html>
