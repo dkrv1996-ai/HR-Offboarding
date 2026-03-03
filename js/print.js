@@ -1,6 +1,5 @@
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
-
 const req = loadRequests().find(r => r.id === id);
 
 let html = `
@@ -49,5 +48,6 @@ req.approvals.forEach(app => {
 html += "</table>";
 
 document.getElementById("content").innerHTML = html;
+
 
 
