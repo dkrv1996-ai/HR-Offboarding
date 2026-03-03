@@ -20,17 +20,34 @@ let html = `
 <tr><th>Department</th><th>Status</th><th>Comment</th><th>Date</th></tr>
 `;
 
-req.approvals.forEach(a=>{
+req.approvals.forEach(app => {
   html += `
-  <tr>
-    <td>${a.role}</td>
-    <td>${a.status}</td>
-    <td>${a.comment}</td>
-    <td>${a.actionDate}</td>
-  </tr>`;
+    <h3>${app.role}</h3>
+    <p><strong>Status:</strong> ${app.status}</p>
+    <p><strong>Comment:</strong> ${app.comment || "-"}</p>
+    <p><strong>Date:</strong> ${app.actionDate || "-"}</p>
+  `;
+
+  if (app.extraData) {
+    html += "<table border='1' width='100%' cellspacing='0' cellpadding='5'>";
+    html += "<tr><th>Field</th><th>Value</th></tr>";
+
+    for (let key in app.extraData) {
+      html += `
+        <tr>
+          <td>${key}</td>
+          <td>${app.extraData[key]}</td>
+        </tr>
+      `;
+    }
+
+    html += "</table><br>";
+  }
 });
+
 
 html += "</table>";
 
 document.getElementById("content").innerHTML = html;
+
 
