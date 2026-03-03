@@ -84,3 +84,47 @@ th { background: #f1f5f9; }
 @media print {
   header, button { display: none; }
 }
+/* Improve form spacing */
+.card label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.card select,
+.card textarea,
+.card input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.card textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Checklist section styling */
+.card h3 {
+  margin-top: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+/* Print styling */
+@media print {
+  button, select {
+    display: none;
+  }
+
+  body {
+    background: white;
+  }
+
+  .card {
+    box-shadow: none;
+    border: none;
+  }
+}
