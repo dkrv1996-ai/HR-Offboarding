@@ -195,15 +195,14 @@ let currentStep = "";
 
 function createRequest() {
 
-  if(!empName.value || !empId.value) {
-    alert("Please fill all details");
+  if (!empName.value || !empId.value || !empDept.value) {
+    alert("Please fill all required fields.");
     return;
   }
 
-  alert("Request Created Successfully");
-  currentStep = "Manager";
+  alert("Exit Request Created Successfully");
 
-  document.getElementById("managerSection").style.display = "block";
+  startWorkflow();
 }
 
 function approveStep(role) {
@@ -237,3 +236,4 @@ function rejectStep(role) {
 
 </body>
 </html>
+
