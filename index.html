@@ -77,9 +77,28 @@
 
     <label>Department</label>
     <input type="text" id="empDept">
+    
+<label>Manager ID</label>
+<input type="text" id="managerId">
+
+<label>Finance Officer ID</label>
+<input type="text" id="financeId">
+
+<label>IT Officer ID</label>
+<input type="text" id="itIdAssign">
+
+<label>Admin Officer ID</label>
+<input type="text" id="adminIdAssign">
 
     <label>Reason for Exit</label>
-    <textarea id="empReason"></textarea>
+    <label>Reason for Exit</label>
+<select id="empReason">
+  <option value="">-- Select Reason --</option>
+  <option>Resignation</option>
+  <option>Termination</option>
+  <option>Retirement</option>
+</select>
+
 
     <button onclick="createRequest()" class="approve">Submit Request</button>
   </div>
@@ -236,4 +255,5 @@ function rejectStep(role) {
 
 </body>
 </html>
+
 
