@@ -16,7 +16,6 @@ function approveStep(role) {
       return;
     }
   }
-
   alert(role + " Approved Successfully");
 
   nextStep();
