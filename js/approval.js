@@ -9,7 +9,6 @@ function approveStep(role) {
     alert("Please enter comment before approving.");
     return;
   }
-
   // Department specific validation
   if (role === "Finance") {
     if (financeDue.value === "Pending Due") {
