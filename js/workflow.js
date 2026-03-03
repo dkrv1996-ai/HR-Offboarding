@@ -2,6 +2,27 @@
 
 const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
+function createRequest() {
+
+  if (
+    !empName.value ||
+    !empId.value ||
+    !empDept.value ||
+    !empReason.value ||
+    !managerId.value ||
+    !financeId.value ||
+    !itIdAssign.value ||
+    !adminIdAssign.value
+  ) {
+    alert("Please fill all required fields.");
+    return;
+  }
+
+  alert("Exit Request Created Successfully");
+
+  startWorkflow();
+}
+
 
 function startWorkflow() {
   currentStepIndex = 0;
@@ -45,3 +66,4 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
