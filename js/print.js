@@ -33,3 +33,4 @@ req.approvals.forEach(a=>{
 html += "</table>";
 
 document.getElementById("content").innerHTML = html;
+
