@@ -1,60 +1,239 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HR Offboarding Dashboard</title>
+  <title>Employee Exit Management System</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: #f4f6f9;
+    }
+
+    .nav {
+      background: #1f2937;
+      padding: 15px;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 15px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .approve { background: #28a745; color: white; }
+    .reject { background: #dc3545; color: white; }
+
+    .approvalSection {
+      display: none;
+    }
+
+  </style>
 </head>
+
 <body>
+
 <div class="nav">
-  <a href="index.html">Create Request</a>
-  <a href="manager.html">Manager</a>
-  <a href="finance.html">Finance</a>
-  <a href="it.html">IT</a>
-  <a href="admin.html">Admin</a>
-  <a href="final-hr.html">Final HR</a>
+  Employee Exit Management System
 </div>
-
-  
-
-<header>
-  <h2>Offboarding Request System</h2>
-</header>
 
 <div class="container">
 
-<div class="card">
-<h3>Create Request</h3>
-<form id="form">
-<input placeholder="Employee Name" id="name" required>
-<input placeholder="Employee ID" id="empId" required>
-<input placeholder="Department" id="dept" required>
-<input type="date" id="lwd" required>
-<textarea placeholder="Reason" id="reason" required></textarea>
-<button class="btn-primary">Submit</button>
-</form>
+  <!-- CREATE REQUEST -->
+  <div class="card">
+    <h3>Create Exit Request</h3>
+
+    <label>Employee Name</label>
+    <input type="text" id="empName">
+
+    <label>Employee ID</label>
+    <input type="text" id="empId">
+
+    <label>Department</label>
+    <input type="text" id="empDept">
+
+    <label>Reason for Exit</label>
+    <textarea id="empReason"></textarea>
+
+    <button onclick="createRequest()" class="approve">Submit Request</button>
+  </div>
+
+
+  <!-- MANAGER -->
+  <div id="managerSection" class="card approvalSection">
+    <h3>Manager Approval</h3>
+    <textarea id="managerComment" placeholder="Manager Comment"></textarea>
+    <button onclick="approveStep('Manager')" class="approve">Approve</button>
+    <button onclick="rejectStep('Manager')" class="reject">Reject</button>
+  </div>
+
+
+  <!-- FINANCE -->
+  <div id="financeSection" class="card approvalSection">
+    <h3>Finance Clearance</h3>
+
+    <label>Due Amount</label>
+    <select id="financeDue">
+      <option>No Due</option>
+      <option>Pending Due</option>
+    </select>
+
+    <label>Settlement Completed</label>
+    <select id="financeSettlement">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <textarea id="financeComment" placeholder="Finance Comment"></textarea>
+    <button onclick="approveStep('Finance')" class="approve">Approve</button>
+    <button onclick="rejectStep('Finance')" class="reject">Reject</button>
+  </div>
+
+
+  <!-- IT -->
+  <div id="itSection" class="card approvalSection">
+    <h3>IT Clearance</h3>
+
+    <label>ID Blocked</label>
+    <select id="itId">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <label>Laptop Returned</label>
+    <select id="itLaptop">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <label>ERP Blocked</label>
+    <select id="itErp">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <textarea id="itComment" placeholder="IT Comment"></textarea>
+    <button onclick="approveStep('IT')" class="approve">Approve</button>
+    <button onclick="rejectStep('IT')" class="reject">Reject</button>
+  </div>
+
+
+  <!-- ADMIN -->
+  <div id="adminSection" class="card approvalSection">
+    <h3>Admin Clearance</h3>
+
+    <label>ID Card Collected</label>
+    <select id="adminId">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <label>Entry Blocked</label>
+    <select id="adminEntry">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <textarea id="adminComment" placeholder="Admin Comment"></textarea>
+    <button onclick="approveStep('Admin')" class="approve">Approve</button>
+    <button onclick="rejectStep('Admin')" class="reject">Reject</button>
+  </div>
+
+
+  <!-- FINAL HR -->
+  <div id="finalHrSection" class="card approvalSection">
+    <h3>Final HR Closure</h3>
+
+    <label>Exit Interview Done</label>
+    <select id="hrExit">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <label>Experience Letter Issued</label>
+    <select id="hrLetter">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+
+    <textarea id="hrComment" placeholder="Final HR Comment"></textarea>
+    <button onclick="approveStep('FinalHR')" class="approve">Complete Process</button>
+  </div>
+
 </div>
 
-<div class="card">
-<h3>Dashboard</h3>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Name</th>
-<th>Status</th>
-<th>Pending With</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody id="body"></tbody>
-</table>
-</div>
 
-</div>
+<script>
 
-<script src="js/storage.js"></script>
-<script src="js/workflow.js"></script>
-<script src="js/dashboard.js"></script>
+let currentStep = "";
+
+function createRequest() {
+
+  if(!empName.value || !empId.value) {
+    alert("Please fill all details");
+    return;
+  }
+
+  alert("Request Created Successfully");
+  currentStep = "Manager";
+
+  document.getElementById("managerSection").style.display = "block";
+}
+
+function approveStep(role) {
+
+  if(role === "Manager") {
+    document.getElementById("financeSection").style.display = "block";
+  }
+
+  else if(role === "Finance") {
+    document.getElementById("itSection").style.display = "block";
+  }
+
+  else if(role === "IT") {
+    document.getElementById("adminSection").style.display = "block";
+  }
+
+  else if(role === "Admin") {
+    document.getElementById("finalHrSection").style.display = "block";
+  }
+
+  else if(role === "FinalHR") {
+    alert("Exit Process Completed Successfully!");
+  }
+}
+
+function rejectStep(role) {
+  alert(role + " Rejected the Request");
+}
+
+</script>
+
 </body>
 </html>
-
