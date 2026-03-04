@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Exit Request</title>
+</head>
+<body>
+  <h2>Create New Exit Request</h2>
+  <form id="form">
+    <label>Name: <input type="text" id="name" required></label><br>
+    <label>Employee ID: <input type="text" id="empId" required></label><br>
+    <label>Department: <input type="text" id="dept" required></label><br>
+    <label>Last Working Day: <input type="date" id="lwd" required></label><br>
+    <label>Reason: <textarea id="reason" required></textarea></label><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    function loadRequests() {
+      return JSON.parse(localStorage.getItem("exitRequests") || "[]");
+    }
+
+    function saveRequests(data) {
+      localStorage.setItem("exitRequests", JSON.stringify(data));
+    }
+
+    const form = document.getElementById("form");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      const requests = loadRequests();
+      const newRequest = {
+        id: "REQ" + Date.now(),
+        data: {
+          name: document.getElementById("name").value,
+          empId: document.getElementById("empId").value,
+          dept: document.getElementById("dept").value,
+          lwd: document.getElementById("lwd").value,
+          reason: document.getElementById("reason").value
+        },
+        status: "in-progress",
+        currentStep: 0,
+        history: []
+      };
+      requests.push(newRequest);
+      saveRequests(requests);
+
+      alert("Exit Request Created Successfully");
+      this.reset();
+    });
+  </script>
+</body>
+</html>
