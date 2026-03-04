@@ -2,25 +2,6 @@
 
 const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
-function createRequest() {
-  if (
-    !empName.value ||
-    !empId.value ||
-    !empDept.value ||
-    !empReason.value ||
-    !managerId.value ||
-    !financeId.value ||
-    !itIdAssign.value ||
-    !adminIdAssign.value
-  ) {
-    alert("Please fill all required fields.");
-    return;
-  }
-
-  alert("Exit Request Created Successfully");
-
-  startWorkflow();
-}
 
 function startWorkflow() {
   currentStepIndex = 0;
@@ -35,6 +16,7 @@ function showCurrentStep() {
     alert("Exit Process Completed Successfully!");
     return;
   }
+
   const step = FLOW[currentStepIndex];
 
   const sectionMap = {
@@ -44,7 +26,13 @@ function showCurrentStep() {
     "Admin": "adminSection",
     "FinalHR": "finalHrSection"
   };
-  document.getElementById(sectionMap[step]).style.display = "block";
+
+  const section = document.getElementById(sectionMap[step]);
+
+  if (section) {
+    section.style.display = "block";
+    section.scrollIntoView({ behavior: "smooth" });
+  }
 }
 
 function nextStep() {
@@ -62,5 +50,3 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
-
-
