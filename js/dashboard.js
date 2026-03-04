@@ -1,18 +1,36 @@
-document.getElementById("form").addEventListener("submit", function(e){
-  e.preventDefault();
+// dashboard.js
 
-  createRequest({
-    name: name.value,
-    empId: empId.value,
-    dept: dept.value,
-    lwd: lwd.value,
-    reason: reason.value
-  });
-  this.reset();
+function loadRequests() {
+  return JSON.parse(localStorage.getItem("exitRequests") || "[]");
+}
+
+function saveRequests(data) {
+  localStorage.setItem("exitRequests", JSON.stringify(data));
+}
+
+function createRequest(data) {
+
+  const requests = loadRequests();
+
+  const newRequest = {
+    id: "REQ" + Date.now(),
+    data: data,
+    status: "in-progress",
+    currentStep: 0
+  };
+
+  requests.push(newRequest);
+  saveRequests(requests);
+
+  alert("Exit Request Created Successfully");
+
   render();
-});
+}
+
 function render() {
   const tbody = document.getElementById("body");
+  if (!tbody) return;
+
   tbody.innerHTML = "";
 
   loadRequests().forEach(r => {
@@ -30,12 +48,11 @@ function render() {
     `;
   });
 }
-function del(id){
+
+function del(id) {
   const data = loadRequests().filter(r => r.id !== id);
   saveRequests(data);
   render();
 }
 
 render();
-
-
