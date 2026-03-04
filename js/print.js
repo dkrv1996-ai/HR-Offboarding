@@ -1,7 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 const req = loadRequests().find(r => r.id === id);
-
 let html = `
 <h3>Employee Details</h3>
 <table>
@@ -13,11 +12,9 @@ let html = `
 <tr><td>Reason</td><td>${req.data.reason}</td></tr>
 <tr><td>Status</td><td>${req.status}</td></tr>
 </table>
-
 <h3>Approval History</h3>
 <table>
 <tr><th>Department</th><th>Status</th><th>Comment</th><th>Date</th></tr>
-`;
 
 req.approvals.forEach(app => {
   html += `
@@ -43,11 +40,9 @@ req.approvals.forEach(app => {
     html += "</table><br>";
   }
 });
-
-
 html += "</table>";
-
 document.getElementById("content").innerHTML = html;
+
 
 
 
