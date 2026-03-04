@@ -1,61 +1,71 @@
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
+// Load and save functions
+function loadRequests() {
+  return JSON.parse(localStorage.getItem("exitRequests") || "[]");
+}
 
-const req = loadRequests().find(r => r.id === id);
+function saveRequests(data) {
+  localStorage.setItem("exitRequests", JSON.stringify(data));
+}
 
-if (!req) {
-  document.getElementById("content").innerHTML = "<h3>Request Not Found</h3>";
-} else {
+// Delete a request
+function del(id) {
+  if (!confirm("Are you sure you want to delete this record?")) return;
+  const data = loadRequests().filter(r => r.id !== id);
+  saveRequests(data);
+  render();
+}
 
-  let html = `
-  <h3>Employee Details</h3>
-  <table border="1" width="100%" cellspacing="0" cellpadding="5">
-    <tr><td>ID</td><td>${req.id}</td></tr>
-    <tr><td>Name</td><td>${req.data.name}</td></tr>
-    <tr><td>Employee ID</td><td>${req.data.empId}</td></tr>
-    <tr><td>Department</td><td>${req.data.dept}</td></tr>
-    <tr><td>LWD</td><td>${req.data.lwd}</td></tr>
-    <tr><td>Reason</td><td>${req.data.reason}</td></tr>
-    <tr><td>Status</td><td>${req.status}</td></tr>
-  </table>
+// Print all records
+function printAll() {
+  window.print();
+}
 
-  <h3>Approval History</h3>
-  `;
+// Render all requests with comments/remarks
+function render() {
+  const tbody = document.getElementById("body");
+  if (!tbody) return;
 
-  if (req.approvals && req.approvals.length > 0) {
+  const requests = loadRequests();
+  tbody.innerHTML = "";
 
-    req.approvals.forEach(app => {
-
-      html += `
-        <h4>${app.role}</h4>
-        <p><strong>Status:</strong> ${app.status}</p>
-        <p><strong>Comment:</strong> ${app.comment || "-"}</p>
-        <p><strong>Date:</strong> ${app.actionDate || "-"}</p>
-      `;
-
-      if (app.extraData) {
-        html += `
-          <table border="1" width="100%" cellspacing="0" cellpadding="5">
-          <tr><th>Field</th><th>Value</th></tr>
-        `;
-
-        for (let key in app.extraData) {
-          html += `
-            <tr>
-              <td>${key}</td>
-              <td>${app.extraData[key]}</td>
-            </tr>
-          `;
-        }
-
-        html += `</table><br>`;
-      }
-
-    });
-
-  } else {
-    html += "<p>No approvals yet.</p>";
+  if (requests.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="10">No records found</td></tr>`;
+    return;
   }
 
-  document.getElementById("content").innerHTML = html;
+  requests.forEach(r => {
+    // Create a single row for main request info
+    let row = `
+      <tr>
+        <td>${r.id}</td>
+        <td>${r.data.name}</td>
+        <td>${r.data.empId}</td>
+        <td>${r.data.dept}</td>
+        <td>${r.data.lwd}</td>
+        <td>${r.data.reason}</td>
+        <td>${r.status}</td>
+        <td>
+          <button onclick="del('${r.id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+
+    tbody.innerHTML += row;
+
+    // Add a row for each comment/remark in history
+    if (r.history && r.history.length > 0) {
+      r.history.forEach(h => {
+        tbody.innerHTML += `
+          <tr style="background:#f9f9f9; font-size:0.9em;">
+            <td colspan="2">Remark by: ${h.by}</td>
+            <td colspan="3">Action: ${h.action}</td>
+            <td colspan="3">Notes: ${h.notes} <br>At: ${new Date(h.at).toLocaleString()}</td>
+          </tr>
+        `;
+      });
+    }
+  });
 }
+
+// Initial render
+render();
