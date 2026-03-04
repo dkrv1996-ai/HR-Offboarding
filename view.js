@@ -3,7 +3,6 @@ const user = localStorage.getItem("loggedInUser");
 if (!user) {
   window.location.href = "login.html";
 }
-
 function loadRequests() {
   return JSON.parse(localStorage.getItem("exitRequests") || "[]");
 }
@@ -21,7 +20,6 @@ if (!request) {
   alert("Request not found");
   window.location.href = "dashboard.html";
 }
-
 // Fill Data
 document.getElementById("id").innerText = request.id;
 document.getElementById("name").innerText = request.name;
