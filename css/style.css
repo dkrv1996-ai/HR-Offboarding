@@ -91,3 +91,49 @@ button {
 .approvalSection {
   display: none;
 }
+
+.login-body {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.login-card {
+  background: white;
+  padding: 40px;
+  width: 350px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.login-card h2 {
+  margin-bottom: 20px;
+  color: #2a5298;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 10px;
+  background: #2a5298;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.login-card button:hover {
+  background: #1e3c72;
+}
+
