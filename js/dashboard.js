@@ -28,18 +28,27 @@ function printRequest(id) {
 
   let historyHTML = "";
 
-  if (request.history && request.history.length > 0) {
-    request.history.forEach(h => {
-      historyHTML += `
-        <tr>
-          <td>${h.by}</td>
-          <td>${h.action}</td>
-          <td>${h.notes || "-"}</td>
-          <td>${new Date(h.at).toLocaleString()}</td>
-        </tr>
-      `;
-    });
-  }
+if (request.history && request.history.length > 0) {
+  request.history.forEach(h => {
+
+    const by = h.by || "Unknown";
+    const action = h.action || "-";
+    const notes = h.notes || "-";
+    const date = h.at ? new Date(h.at).toLocaleString() : "-";
+
+    historyHTML += `
+      <p>
+        <strong>${by}</strong> - ${action}<br>
+        Remarks: ${notes}<br>
+        Date: ${date}
+      </p>
+      <hr>
+    `;
+  });
+}
+
+document.getElementById("history").innerHTML = historyHTML;
+
 
   const printWindow = window.open("", "", "width=900,height=700");
 
@@ -188,6 +197,7 @@ function renderDashboard() {
 }
 
 renderDashboard();
+
 
 
 
