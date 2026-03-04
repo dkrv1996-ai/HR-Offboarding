@@ -1,57 +1,43 @@
+// =========================
+// LOCAL STORAGE HELPERS
+// =========================
 function loadRequests() {
   return JSON.parse(localStorage.getItem("exitRequests") || "[]");
 }
 
+function saveRequests(requests) {
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+}
+
+// =========================
+// DELETE REQUEST
+// =========================
 function deleteRequest(id) {
   if (!confirm("Are you sure you want to delete this request?")) return;
   const updated = loadRequests().filter(r => r.id !== id);
-  localStorage.setItem("exitRequests", JSON.stringify(updated));
+  saveRequests(updated);
   renderDashboard();
 }
 
+// =========================
+// VIEW REQUEST
+// =========================
 function viewRequest(id) {
   window.location.href = "view.html?id=" + id;
 }
 
 // =========================
-// RENDER DASHBOARD
+// LOGOUT FUNCTION
 // =========================
-function renderDashboard() {
-  const tbody = document.getElementById("body");
-  if (!tbody) return;
-
-  const requests = loadRequests();
-  tbody.innerHTML = "";
-
-  if (requests.length === 0) {
-    tbody.innerHTML = "<tr><td colspan='8'>No records found</td></tr>";
-    return;
-  }
-
-  requests.forEach(r => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${r.id}</td>
-        <td>${r.name}</td>
-        <td>${r.empId}</td>
-        <td>${r.department}</td>
-        <td>${r.reason}</td>
-        <td>${r.status}</td>
-        <td>${r.lastApprovedBy || "-"}</td>
-        <td>
-          <button onclick="viewRequest('${r.id}')">View</button>
-          <button onclick="deleteRequest('${r.id}')">Delete</button>
-          <button onclick="printRequest('${r.id}')">Print</button>
-        </td>
-      </tr>
-    `;
-  });
+function logout() {
+  // Clear any session info (if stored)
+  localStorage.removeItem("userSession");
+  // Redirect to login page
+  window.location.href = "login.html";
 }
 
-renderDashboard();
-
 // =========================
-// PRINT
+// PRINT REQUEST
 // =========================
 function printRequest(id) {
   const request = loadRequests().find(r => r.id === id);
@@ -90,12 +76,12 @@ function printRequest(id) {
           <tr><th>Employee ID</th><td>${request.empId}</td></tr>
           <tr><th>Department</th><td>${request.department}</td></tr>
           <tr><th>Reason</th><td>${request.reason}</td></tr>
-          <tr><th>Manager Approval</th><td>${request.managerApproval}</td></tr>
-          <tr><th>IT Clearance</th><td>${request.itApproval}</td></tr>
-          <tr><th>Asset Returned</th><td>${request.assetReturn}</td></tr>
-          <tr><th>Finance Clearance</th><td>${request.financeApproval}</td></tr>
-          <tr><th>HR Approval</th><td>${request.hrApproval}</td></tr>
-          <tr><th>Final Status</th><td>${request.status}</td></tr>
+          <tr><th>Manager Approval</th><td>${request.managerApproval || "-"}</td></tr>
+          <tr><th>IT Clearance</th><td>${request.itApproval || "-"}</td></tr>
+          <tr><th>Asset Returned</th><td>${request.assetReturn || "-"}</td></tr>
+          <tr><th>Finance Clearance</th><td>${request.financeApproval || "-"}</td></tr>
+          <tr><th>HR Approval</th><td>${request.hrApproval || "-"}</td></tr>
+          <tr><th>Final Status</th><td>${request.status || "-"}</td></tr>
           <tr><th>Last Approved By</th><td>${request.lastApprovedBy || "-"}</td></tr>
         </table>
 
@@ -117,3 +103,41 @@ function printRequest(id) {
   printWindow.document.close();
   printWindow.print();
 }
+
+// =========================
+// RENDER DASHBOARD
+// =========================
+function renderDashboard() {
+  const tbody = document.getElementById("body");
+  if (!tbody) return;
+
+  const requests = loadRequests();
+  tbody.innerHTML = "";
+
+  if (requests.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='8'>No records found</td></tr>";
+    return;
+  }
+
+  requests.forEach(r => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${r.id}</td>
+        <td>${r.name}</td>
+        <td>${r.empId}</td>
+        <td>${r.department}</td>
+        <td>${r.reason}</td>
+        <td>${r.status}</td>
+        <td>${r.lastApprovedBy || "-"}</td>
+        <td>
+          <button onclick="viewRequest('${r.id}')">View</button>
+          <button onclick="deleteRequest('${r.id}')">Delete</button>
+          <button onclick="printRequest('${r.id}')">Print</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// Initial render
+renderDashboard();
