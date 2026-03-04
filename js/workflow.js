@@ -4,6 +4,7 @@ const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
 
 function startWorkflow() {
+   console.log("Workflow Started");
   currentStepIndex = 0;
   showCurrentStep();
 }
@@ -50,3 +51,4 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
