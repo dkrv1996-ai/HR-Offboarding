@@ -1,4 +1,8 @@
-const FLOW = ["HR Approval", "Manager Approval", "IT Clearance", "Finance Clearance", "Completed"];
+
+if (!window.FLOW) { 
+  window.FLOW = ["HR Approval","Manager Approval","IT Clearance","Finance Clearance","Completed"];
+}
+
 
 const name = document.getElementById("name");
 const empId = document.getElementById("empId");
@@ -82,5 +86,6 @@ function advanceStep(id) {
 }
 
 render();
+
 
 
