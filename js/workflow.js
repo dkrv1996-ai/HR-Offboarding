@@ -7,7 +7,6 @@ if (!user) window.location.href = "login.html";
 const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
 let currentRequestId = null;
-
 // =============================
 // CREATE REQUEST
 // =============================
@@ -186,3 +185,4 @@ function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
+
