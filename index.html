@@ -119,15 +119,12 @@
   <option value="No Due">No Due</option>
   <option value="Pending Due">Pending Due</option>
 </select>
-
-<label>Final Settlement Done</label>
-<select id="financeSettlement">
+<label> Settlement</label>
+<select id="SettlementDue">
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
-
-<textarea id="financeComment" placeholder="Finance Comment"></textarea>
-  
+<textarea id="FinanceRemarks" placeholder="Finance Comment"></textarea>
     <button onclick="approveStep('Finance')" class="approve">Approve</button>
     <button onclick="rejectStep('Finance')" class="reject">Reject</button>
   </div>
@@ -136,18 +133,18 @@
   <div id="itSection" class="card approvalSection">
     <h3>IT Clearance</h3>
 <label>Assets Returned</label>
-<select id="itAssetReturn">
+<select id="assetReturn">
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
 
 <label>ID Blocked</label>
-<select id="itIdBlocked">
+<select id="IdBlocked">
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
 
-<textarea id="itComment" placeholder="IT Comment"></textarea>
+<textarea id="ITRemarks" placeholder="IT Comment"></textarea>
 <button onclick="approveStep('Finance')" class="approve">Approve</button>
     <button onclick="rejectStep('Finance')" class="reject">Reject</button>
 
@@ -158,17 +155,17 @@
   <div id="adminSection" class="card approvalSection">
     <h3>Admin Clearance</h3>
 <label>ID Returned</label>
-<select id="ID rerturn">
+<select id="IDrerturn">
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
 
 <label>ID Blocked</label>
-<select id="itIdBlocked">
+<select id="IdBlocked">
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
-    <textarea id="adminComment" placeholder="Admin Comment"></textarea>
+    <textarea id="AdminRemarkst" placeholder="Admin Comment"></textarea>
     <button onclick="approveStep('Admin')" class="approve">Approve</button>
     <button onclick="rejectStep('Admin')" class="reject">Reject</button>
   </div>
@@ -188,7 +185,7 @@
   <option value="No">No</option>
 </select>
 
-    <textarea id="finalhrComment" placeholder="Final HR Comment"></textarea>
+    <textarea id="FinalRemarks" placeholder="Final HR Comment"></textarea>
     <button onclick="approveStep('FinalHR')" class="approve">Complete Process</button>
   </div>
 
@@ -203,4 +200,5 @@
 
 </body>
 </html>
+
 
