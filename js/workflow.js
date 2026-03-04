@@ -1,14 +1,29 @@
-// workflow.js
+// =============================
 // AUTH CHECK
+// =============================
 const user = localStorage.getItem("loggedInUser");
 
 if (!user) {
   window.location.href = "login.html";
 }
 
+// =============================
+// FLOW CONFIG
+// =============================
 const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
 let currentRequestId = null;
+
+// =============================
+// LOAD & SAVE HELPERS
+// =============================
+function loadRequests() {
+  return JSON.parse(localStorage.getItem("exitRequests") || "[]");
+}
+
+function saveRequests(data) {
+  localStorage.setItem("exitRequests", JSON.stringify(data));
+}
 
 // =============================
 // CREATE REQUEST
@@ -35,26 +50,33 @@ function createRequest() {
 
   const newRequest = {
     id: requestId,
-    name: empName,              // FIXED NAME
+    name: empName,
     empId: empId,
-    department: empDept,        // FIXED NAME
-    reason: empReason,          // FIXED NAME
+    department: empDept,
+    reason: empReason,
     managerId,
     financeId,
     itIdAssign,
     adminIdAssign,
+
+    managerApproval: "Pending",
+    financeApproval: "Pending",
+    itApproval: "Pending",
+    adminApproval: "Pending",
+    finalHrApproval: "Pending",
+    assetReturn: "-",
+
     status: "In Progress",
     currentStep: 0,
     pendingWith: FLOW[0],
     history: []
   };
 
-  let requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
+  const requests = loadRequests();
   requests.push(newRequest);
-  localStorage.setItem("exitRequests", JSON.stringify(requests));
+  saveRequests(requests);
 
   alert("Exit Request Created Successfully");
-
   startWorkflow();
 }
 
@@ -97,16 +119,39 @@ function showCurrentStep() {
 }
 
 // =============================
-// NEXT STEP
+// APPROVE STEP
 // =============================
-function nextStep() {
+function nextStep(role) {
 
   if (!currentRequestId) return;
 
-  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
-  let request = requests.find(r => r.id === currentRequestId);
+  const requests = loadRequests();
+  const request = requests.find(r => r.id === currentRequestId);
 
   if (!request) return;
+
+  const remarksField = document.getElementById(role + "Remarks");
+  const assetField = document.getElementById("assetReturn");
+
+  const remarks = remarksField ? remarksField.value : "";
+
+  // Save approval
+  if (role === "Manager") request.managerApproval = "Approved";
+  if (role === "Finance") request.financeApproval = "Approved";
+  if (role === "IT") {
+    request.itApproval = "Approved";
+    if (assetField) request.assetReturn = assetField.value;
+  }
+  if (role === "Admin") request.adminApproval = "Approved";
+  if (role === "FinalHR") request.finalHrApproval = "Approved";
+
+  // Save history
+  request.history.push({
+    by: role,
+    action: "Approved",
+    notes: remarks,
+    at: new Date().toISOString()
+  });
 
   currentStepIndex++;
   request.currentStep = currentStepIndex;
@@ -115,39 +160,54 @@ function nextStep() {
     request.pendingWith = FLOW[currentStepIndex];
   }
 
-  localStorage.setItem("exitRequests", JSON.stringify(requests));
-
+  saveRequests(requests);
   showCurrentStep();
 }
 
 // =============================
-// REJECT
+// REJECT STEP
 // =============================
 function rejectProcess(role) {
 
   if (!currentRequestId) return;
 
-  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
-  let request = requests.find(r => r.id === currentRequestId);
+  const requests = loadRequests();
+  const request = requests.find(r => r.id === currentRequestId);
 
   if (!request) return;
+
+  const remarksField = document.getElementById(role + "Remarks");
+  const remarks = remarksField ? remarksField.value : "";
+
+  if (role === "Manager") request.managerApproval = "Rejected";
+  if (role === "Finance") request.financeApproval = "Rejected";
+  if (role === "IT") request.itApproval = "Rejected";
+  if (role === "Admin") request.adminApproval = "Rejected";
+  if (role === "FinalHR") request.finalHrApproval = "Rejected";
 
   request.status = "Rejected";
   request.pendingWith = role;
 
-  localStorage.setItem("exitRequests", JSON.stringify(requests));
+  request.history.push({
+    by: role,
+    action: "Rejected",
+    notes: remarks,
+    at: new Date().toISOString()
+  });
+
+  saveRequests(requests);
 
   alert(role + " rejected the request.");
   hideAllSections();
 }
 
 // =============================
-// COMPLETE
+// COMPLETE PROCESS
 // =============================
 function completeProcess() {
 
-  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
-  let request = requests.find(r => r.id === currentRequestId);
+  const requests = loadRequests();
+  const request = requests.find(r => r.id === currentRequestId);
 
   if (!request) return;
 
@@ -155,7 +215,7 @@ function completeProcess() {
   request.pendingWith = "Completed";
   request.currentStep = FLOW.length;
 
-  localStorage.setItem("exitRequests", JSON.stringify(requests));
+  saveRequests(requests);
 
   alert("Exit Process Completed Successfully!");
   hideAllSections();
@@ -169,4 +229,3 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
-
