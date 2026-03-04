@@ -31,7 +31,7 @@ function printRequest(id) {
 if (request.history && request.history.length > 0) {
   request.history.forEach(h => {
 
-    const by = h.by || "Unknown";
+    const by = request.department || "Department";
     const action = h.action || "-";
     const notes = h.notes || "-";
     const date = h.at ? new Date(h.at).toLocaleString() : "-";
@@ -194,6 +194,7 @@ function renderDashboard() {
 }
 
 renderDashboard();
+
 
 
 
