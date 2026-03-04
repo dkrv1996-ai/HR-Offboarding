@@ -1,41 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>View Exit Request</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; }
+    .container { max-width: 900px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    table, th, td { border: 1px solid #333; }
+    th, td { padding: 10px; text-align: left; font-size: 14px; }
+    th { background: #f0f0f0; }
+    .btn { padding: 8px 15px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .btn-print { background-color: #4CAF50; color: white; }
+    .btn-back { background-color: #777; color: white; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    h3 { margin-top: 30px; }
+  </style>
 </head>
 <body>
-<div class="nav">
-  <span>Exit Request Details</span>
-  <button class="logout-btn" onclick="logout()">Logout</button>
-</div>
+
 <div class="container">
-  <div class="card">
+  <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
 
-    <table>
-      <tr><th>ID</th><td id="id"></td></tr>
-      <tr><th>Name</th><td id="name"></td></tr>
-      <tr><th>Employee ID</th><td id="empId"></td></tr>
-      <tr><th>Department</th><td id="dept"></td></tr>
-      <tr><th>Reason</th><td id="reason"></td></tr>
+  <h2>Employee Exit Clearance Form</h2>
 
-      <tr><th>Manager Approval</th><td id="manager"></td></tr>
-      <tr><th>IT Approval</th><td id="it"></td></tr>
-      <tr><th>Asset Return</th><td id="asset"></td></tr>
-      <tr><th>Finance Approval</th><td id="finance"></td></tr>
-      <tr><th>HR Approval</th><td id="hr"></td></tr>
+  <table>
+    <tr><th>ID</th><td id="id"></td></tr>
+    <tr><th>Name</th><td id="name"></td></tr>
+    <tr><th>Employee ID</th><td id="empId"></td></tr>
+    <tr><th>Department</th><td id="dept"></td></tr>
+    <tr><th>Reason</th><td id="reason"></td></tr>
+    <tr><th>Manager Approval</th><td id="manager"></td></tr>
+    <tr><th>IT Clearance</th><td id="it"></td></tr>
+    <tr><th>Asset Returned</th><td id="asset"></td></tr>
+    <tr><th>Finance Clearance</th><td id="finance"></td></tr>
+    <tr><th>HR Approval</th><td id="hr"></td></tr>
+    <tr><th>Final Status</th><td id="status"></td></tr>
+    <tr><th>Last Approved By</th><td id="lastApproved"></td></tr>
+  </table>
 
-      <tr><th>Final Status</th><td id="status"></td></tr>
-    </table>
+  <h3>Approval History</h3>
+  <table id="historyTable">
+    <tr>
+      <th>Approved By</th>
+      <th>Action</th>
+      <th>Remarks</th>
+      <th>Date</th>
+    </tr>
+    <!-- History rows will be inserted here -->
+  </table>
 
-    <h3>Approval History</h3>
-    <div id="history"></div>
-
-    <br>
-    <button onclick="printRequest()">Print</button>
-    <a href="dashboard.html" class="backLink">← Back to Dashboard</a>
-
-  </div>
+  <button class="btn btn-print" onclick="printRequest()">Print</button>
 </div>
 
 <script src="view.js"></script>
