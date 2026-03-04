@@ -9,59 +9,40 @@ let currentRequestId = null;
 // =============================
 function createRequest() {
 
-  const empName = document.getElementById("empName");
-  const empId = document.getElementById("empId");
-  const empDept = document.getElementById("empDept");
-  const empReason = document.getElementById("empReason");
-  const managerId = document.getElementById("managerId");
-  const financeId = document.getElementById("financeId");
-  const itIdAssign = document.getElementById("itIdAssign");
-  const adminIdAssign = document.getElementById("adminIdAssign");
+  const empName = document.getElementById("empName").value.trim();
+  const empId = document.getElementById("empId").value.trim();
+  const empDept = document.getElementById("empDept").value.trim();
+  const empReason = document.getElementById("empReason").value.trim();
+  const managerId = document.getElementById("managerId").value.trim();
+  const financeId = document.getElementById("financeId").value.trim();
+  const itIdAssign = document.getElementById("itIdAssign").value.trim();
+  const adminIdAssign = document.getElementById("adminIdAssign").value.trim();
 
-  if (
-    !empName || !empId || !empDept || !empReason ||
-    !managerId || !financeId || !itIdAssign || !adminIdAssign
-  ) {
-    alert("Form fields missing in HTML.");
-    return;
-  }
-
-  if (
-    !empName.value.trim() ||
-    !empId.value.trim() ||
-    !empDept.value.trim() ||
-    !empReason.value.trim() ||
-    !managerId.value.trim() ||
-    !financeId.value.trim() ||
-    !itIdAssign.value.trim() ||
-    !adminIdAssign.value.trim()
-  ) {
+  if (!empName || !empId || !empDept || !empReason ||
+      !managerId || !financeId || !itIdAssign || !adminIdAssign) {
     alert("Please fill all required fields.");
     return;
   }
 
-  // Generate unique request ID
   const requestId = "REQ" + Date.now();
   currentRequestId = requestId;
 
-  // Create request object
   const newRequest = {
     id: requestId,
-    empName: empName.value.trim(),
-    empId: empId.value.trim(),
-    empDept: empDept.value.trim(),
-    empReason: empReason.value.trim(),
-    managerId: managerId.value.trim(),
-    financeId: financeId.value.trim(),
-    itIdAssign: itIdAssign.value.trim(),
-    adminIdAssign: adminIdAssign.value.trim(),
+    name: empName,              // FIXED NAME
+    empId: empId,
+    department: empDept,        // FIXED NAME
+    reason: empReason,          // FIXED NAME
+    managerId,
+    financeId,
+    itIdAssign,
+    adminIdAssign,
     status: "In Progress",
     currentStep: 0,
     pendingWith: FLOW[0],
     history: []
   };
 
-  // Save to localStorage
   let requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
   requests.push(newRequest);
   localStorage.setItem("exitRequests", JSON.stringify(requests));
@@ -101,19 +82,16 @@ function showCurrentStep() {
     "FinalHR": "finalHrSection"
   };
 
-  const sectionId = sectionMap[step];
-  const section = document.getElementById(sectionId);
+  const section = document.getElementById(sectionMap[step]);
 
   if (section) {
     section.style.display = "block";
     section.scrollIntoView({ behavior: "smooth" });
-  } else {
-    console.error("Section not found:", sectionId);
   }
 }
 
 // =============================
-// MOVE TO NEXT STEP
+// NEXT STEP
 // =============================
 function nextStep() {
 
@@ -137,7 +115,7 @@ function nextStep() {
 }
 
 // =============================
-// REJECT PROCESS
+// REJECT
 // =============================
 function rejectProcess(role) {
 
@@ -158,7 +136,7 @@ function rejectProcess(role) {
 }
 
 // =============================
-// COMPLETE PROCESS
+// COMPLETE
 // =============================
 function completeProcess() {
 
@@ -178,11 +156,10 @@ function completeProcess() {
 }
 
 // =============================
-// HIDE ALL APPROVAL SECTIONS
+// HIDE SECTIONS
 // =============================
 function hideAllSections() {
   document.querySelectorAll(".approvalSection").forEach(sec => {
     sec.style.display = "none";
   });
 }
-
