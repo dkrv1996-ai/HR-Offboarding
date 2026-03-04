@@ -53,7 +53,7 @@ function render() {
         <td><span class="badge ${r.status}">${r.status}</span></td>
         <td>${r.status === "in-progress" ? FLOW[r.currentStep] : "-"}</td>
         <td>
-          <a href="print.html?id=${r.id}">Open</a> |
+          <a href="view.html?id=${r.id}">Open</a> |
           <button onclick="del('${r.id}')">Delete</button>
         </td>
       </tr>
@@ -80,3 +80,4 @@ function advanceStep(id) {
 }
 
 render();
+
