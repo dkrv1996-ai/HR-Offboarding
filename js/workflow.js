@@ -2,7 +2,11 @@
 
 const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
+let currentRequestId = null;
 
+// =============================
+// CREATE REQUEST
+// =============================
 function createRequest() {
 
   const empName = document.getElementById("empName");
@@ -36,22 +40,54 @@ function createRequest() {
     return;
   }
 
+  // Generate unique request ID
+  const requestId = "REQ" + Date.now();
+  currentRequestId = requestId;
+
+  // Create request object
+  const newRequest = {
+    id: requestId,
+    empName: empName.value.trim(),
+    empId: empId.value.trim(),
+    empDept: empDept.value.trim(),
+    empReason: empReason.value.trim(),
+    managerId: managerId.value.trim(),
+    financeId: financeId.value.trim(),
+    itIdAssign: itIdAssign.value.trim(),
+    adminIdAssign: adminIdAssign.value.trim(),
+    status: "In Progress",
+    currentStep: 0,
+    pendingWith: FLOW[0],
+    history: []
+  };
+
+  // Save to localStorage
+  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  requests.push(newRequest);
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+
   alert("Exit Request Created Successfully");
 
   startWorkflow();
 }
 
+// =============================
+// START WORKFLOW
+// =============================
 function startWorkflow() {
   currentStepIndex = 0;
   showCurrentStep();
 }
 
+// =============================
+// SHOW CURRENT STEP
+// =============================
 function showCurrentStep() {
 
   hideAllSections();
 
   if (currentStepIndex >= FLOW.length) {
-    alert("Exit Process Completed Successfully!");
+    completeProcess();
     return;
   }
 
@@ -76,16 +112,74 @@ function showCurrentStep() {
   }
 }
 
+// =============================
+// MOVE TO NEXT STEP
+// =============================
 function nextStep() {
+
+  if (!currentRequestId) return;
+
+  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  let request = requests.find(r => r.id === currentRequestId);
+
+  if (!request) return;
+
   currentStepIndex++;
+  request.currentStep = currentStepIndex;
+
+  if (currentStepIndex < FLOW.length) {
+    request.pendingWith = FLOW[currentStepIndex];
+  }
+
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+
   showCurrentStep();
 }
 
+// =============================
+// REJECT PROCESS
+// =============================
 function rejectProcess(role) {
+
+  if (!currentRequestId) return;
+
+  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  let request = requests.find(r => r.id === currentRequestId);
+
+  if (!request) return;
+
+  request.status = "Rejected";
+  request.pendingWith = role;
+
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+
   alert(role + " rejected the request.");
   hideAllSections();
 }
 
+// =============================
+// COMPLETE PROCESS
+// =============================
+function completeProcess() {
+
+  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  let request = requests.find(r => r.id === currentRequestId);
+
+  if (!request) return;
+
+  request.status = "Approved";
+  request.pendingWith = "Completed";
+  request.currentStep = FLOW.length;
+
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+
+  alert("Exit Process Completed Successfully!");
+  hideAllSections();
+}
+
+// =============================
+// HIDE ALL APPROVAL SECTIONS
+// =============================
 function hideAllSections() {
   document.querySelectorAll(".approvalSection").forEach(sec => {
     sec.style.display = "none";
