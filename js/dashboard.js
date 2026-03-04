@@ -11,7 +11,6 @@ document.getElementById("form").addEventListener("submit", function(e){
   this.reset();
   render();
 });
-
 function render() {
   const tbody = document.getElementById("body");
   tbody.innerHTML = "";
@@ -31,7 +30,6 @@ function render() {
     `;
   });
 }
-
 function del(id){
   const data = loadRequests().filter(r => r.id !== id);
   saveRequests(data);
@@ -39,4 +37,5 @@ function del(id){
 }
 
 render();
+
 
