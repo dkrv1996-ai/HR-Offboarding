@@ -1,3 +1,11 @@
+// AUTH CHECK
+const user = localStorage.getItem("loggedInUser");
+
+if (!user) {
+  window.location.href = "login.html";
+}
+
+
 function loadRequests() {
   return JSON.parse(localStorage.getItem("exitRequests") || "[]");
 }
@@ -95,3 +103,4 @@ function renderDashboard() {
 }
 
 renderDashboard();
+
