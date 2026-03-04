@@ -134,46 +134,54 @@ function showCurrentStep() {
 // =============================
 function nextStep(role) {
 
-  if (!currentRequestId) return;
-
   const requests = loadRequests();
   const request = requests.find(r => r.id === currentRequestId);
-
   if (!request) return;
 
-  const remarksField = document.getElementById(role + "Remarks");
-  const assetField = document.getElementById("assetReturn");
+  const remarks = document.getElementById(role + "Remarks")?.value || "";
 
-  const remarks = remarksField ? remarksField.value : "";
+  // MANAGER
+  if (role === "Manager") {
+    request.managerApproval = "Approved";
+    request.managerRemark = remarks;
+  }
 
-  // Save approval
-  if (role === "Manager") request.managerApproval = "Approved";
-  if (role === "Finance") request.financeApproval = "Approved";
+  // IT
   if (role === "IT") {
     request.itApproval = "Approved";
-    if (assetField) request.assetReturn = assetField.value;
+    request.itRemark = remarks;
+    request.assetReturn = document.getElementById("assetReturn")?.value || "-";
+    request.idBlocked = document.getElementById("idBlocked")?.value || "-";
   }
-  if (role === "Admin") request.adminApproval = "Approved";
-  if (role === "FinalHR") request.finalHrApproval = "Approved";
 
-  // Save history
-  request.history.push({
-    by: role,
-    action: "Approved",
-    notes: remarks,
-    at: new Date().toISOString()
-  });
+  // FINANCE
+  if (role === "Finance") {
+    request.financeApproval = "Approved";
+    request.financeRemark = remarks;
+    request.settlementDue = document.getElementById("settlementDue")?.value || "-";
+  }
+
+  // HR
+  if (role === "FinalHR") {
+    request.finalHrApproval = "Approved";
+    request.hrRemark = remarks;
+    request.finalSettlement = document.getElementById("finalSettlement")?.value || "-";
+  }
 
   currentStepIndex++;
   request.currentStep = currentStepIndex;
 
-  if (currentStepIndex < FLOW.length) {
+  if (currentStepIndex >= FLOW.length) {
+    request.status = "Approved";
+    request.pendingWith = "Completed";
+  } else {
     request.pendingWith = FLOW[currentStepIndex];
   }
 
   saveRequests(requests);
   showCurrentStep();
 }
+
 
 // =============================
 // REJECT STEP
@@ -240,4 +248,5 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
 
