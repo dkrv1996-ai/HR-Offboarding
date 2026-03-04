@@ -3,7 +3,6 @@
 const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
 function createRequest() {
-
   if (
     !empName.value ||
     !empId.value ||
@@ -23,7 +22,6 @@ function createRequest() {
   startWorkflow();
 }
 
-
 function startWorkflow() {
   currentStepIndex = 0;
   showCurrentStep();
@@ -37,7 +35,6 @@ function showCurrentStep() {
     alert("Exit Process Completed Successfully!");
     return;
   }
-
   const step = FLOW[currentStepIndex];
 
   const sectionMap = {
@@ -47,7 +44,6 @@ function showCurrentStep() {
     "Admin": "adminSection",
     "FinalHR": "finalHrSection"
   };
-
   document.getElementById(sectionMap[step]).style.display = "block";
 }
 
@@ -66,4 +62,5 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
 
