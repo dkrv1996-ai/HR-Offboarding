@@ -58,3 +58,55 @@ function printRequest(id) {
   printWindow.document.close();
   printWindow.print();
 }
+
+function viewRequest(id) {
+  window.location.href = "view.html?id=" + id;
+}
+
+function renderDashboard() {
+  const tbody = document.getElementById("body");
+  if (!tbody) return;
+
+  const requests = loadRequests();
+  tbody.innerHTML = "";
+
+  if (requests.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='7'>No records found</td></tr>";
+    return;
+  }
+
+  requests.forEach(r => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${r.id}</td>
+        <td>${r.data.name}</td>
+        <td>${r.data.empId}</td>
+        <td>${r.data.dept}</td>
+        <td>${r.data.reason}</td>
+        <td>${r.status}</td>
+        <td>
+          <button onclick="viewRequest('${r.id}')">View</button>
+          <button onclick="deleteRequest('${r.id}')">Delete</button>
+          <button onclick="printRequest('${r.id}')">Print</button>
+        </td>
+      </tr>
+    `;
+
+    if (r.history && r.history.length > 0) {
+      r.history.forEach(h => {
+        tbody.innerHTML += `
+          <tr style="background:#f9f9f9;font-size:14px;">
+            <td colspan="2">By: ${h.by}</td>
+            <td colspan="2">Action: ${h.action}</td>
+            <td colspan="3">
+              Notes: ${h.notes || "-"}<br>
+              At: ${new Date(h.at).toLocaleString()}
+            </td>
+          </tr>
+        `;
+      });
+    }
+  });
+}
+
+renderDashboard();
