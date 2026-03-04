@@ -1,63 +1,87 @@
-// Load all requests from localStorage
+// ===============================
+// LOAD REQUESTS
+// ===============================
 function loadRequests() {
   return JSON.parse(localStorage.getItem("exitRequests") || "[]");
 }
 
-// Save requests to localStorage
-function saveRequests(data) {
-  localStorage.setItem("exitRequests", JSON.stringify(data));
+// ===============================
+// GET ID FROM URL
+// ===============================
+function getRequestId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
 }
 
-// Delete a request
-function del(id){
-  if(!confirm("Are you sure you want to delete this request?")) return;
-  const data = loadRequests().filter(r=>r.id!==id);
-  saveRequests(data);
-  render();
+// ===============================
+// FORMAT STATUS CLASS
+// ===============================
+function formatStatusClass(status) {
+  if (status === "Approved") return "approved";
+  if (status === "Rejected") return "rejected";
+  if (status === "In Progress") return "in-progress";
+  return "";
 }
 
-// Render all requests with history/remarks
-function render(){
-  const tbody = document.getElementById("body");
-  if(!tbody) return;
+// ===============================
+// RENDER SINGLE REQUEST
+// ===============================
+function render() {
 
+  const requestId = getRequestId();
   const requests = loadRequests();
-  tbody.innerHTML = "";
 
-  if(requests.length === 0){
-    tbody.innerHTML = "<tr><td colspan='8'>No records found</td></tr>";
+  const request = requests.find(r => r.id === requestId);
+
+  const detailsDiv = document.getElementById("details");
+  const historyBody = document.getElementById("historyBody");
+
+  if (!request) {
+    detailsDiv.innerHTML = "<p>Request not found.</p>";
     return;
   }
 
-  requests.forEach(r=>{
-    // Main request row
-    tbody.innerHTML += `
+  // ===============================
+  // SHOW DETAILS
+  // ===============================
+  detailsDiv.innerHTML = `
+    <p><strong>Request ID:</strong> ${request.id}</p>
+    <p><strong>Employee Name:</strong> ${request.empName}</p>
+    <p><strong>Employee ID:</strong> ${request.empId}</p>
+    <p><strong>Department:</strong> ${request.empDept}</p>
+    <p><strong>Reason:</strong> ${request.empReason}</p>
+    <p><strong>Status:</strong>
+      <span class="badge ${formatStatusClass(request.status)}">
+        ${request.status}
+      </span>
+    </p>
+    <p><strong>Pending With:</strong> ${request.pendingWith}</p>
+  `;
+
+  // ===============================
+  // SHOW HISTORY
+  // ===============================
+  historyBody.innerHTML = "";
+
+  if (!request.history || request.history.length === 0) {
+    historyBody.innerHTML =
+      "<tr><td colspan='4'>No approval history available</td></tr>";
+    return;
+  }
+
+  request.history.forEach(h => {
+    historyBody.innerHTML += `
       <tr>
-        <td>${r.id}</td>
-        <td>${r.data.name}</td>
-        <td>${r.data.empId}</td>
-        <td>${r.data.dept}</td>
-        <td>${r.data.lwd}</td>
-        <td>${r.data.reason}</td>
-        <td>${r.status}</td>
-        <td><button onclick="del('${r.id}')">Delete</button></td>
+        <td>${h.role}</td>
+        <td>${h.action}</td>
+        <td>${h.comment || "-"}</td>
+        <td>${h.date}</td>
       </tr>
     `;
-
-    // Add each remark/history
-    if(r.history && r.history.length>0){
-      r.history.forEach(h=>{
-        tbody.innerHTML += `
-          <tr class="remark">
-            <td colspan="2">By: ${h.by}</td>
-            <td colspan="3">Action: ${h.action}</td>
-            <td colspan="3">Notes: ${h.notes}<br>At: ${new Date(h.at).toLocaleString()}</td>
-          </tr>
-        `;
-      });
-    }
   });
 }
 
-// Initial render
+// ===============================
+// INITIAL LOAD
+// ===============================
 render();
