@@ -1,4 +1,10 @@
 // workflow.js
+// AUTH CHECK
+const user = localStorage.getItem("loggedInUser");
+
+if (!user) {
+  window.location.href = "login.html";
+}
 
 const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
@@ -163,3 +169,4 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
