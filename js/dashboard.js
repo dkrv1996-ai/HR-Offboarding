@@ -1,40 +1,28 @@
-// dashboard.js
+const FLOW = ["HR Approval", "Manager Approval", "IT Clearance", "Finance Clearance", "Completed"];
 
-function loadRequests() {
-  return JSON.parse(localStorage.getItem("exitRequests") || "[]");
-}
+const name = document.getElementById("name");
+const empId = document.getElementById("empId");
+const dept = document.getElementById("dept");
+const lwd = document.getElementById("lwd");
+const reason = document.getElementById("reason");
 
-function saveRequests(data) {
-  localStorage.setItem("exitRequests", JSON.stringify(data));
-}
+function loadRequests() { return JSON.parse(localStorage.getItem("exitRequests") || "[]"); }
+function saveRequests(data) { localStorage.setItem("exitRequests", JSON.stringify(data)); }
 
 function createRequest(data) {
-
   const requests = loadRequests();
-
-  const newRequest = {
-    id: "REQ" + Date.now(),
-    data: data,
-    status: "in-progress",
-    currentStep: 0
-  };
-
+  const newRequest = { id: "REQ" + Date.now(), data: data, status: "in-progress", currentStep: 0 };
   requests.push(newRequest);
   saveRequests(requests);
-
   alert("Exit Request Created Successfully");
-
   render();
 }
 
-
-// ✅ FORM SUBMIT HANDLER (VERY IMPORTANT)
+// FORM SUBMIT
 const form = document.getElementById("form");
-
 if (form) {
   form.addEventListener("submit", function(e){
     e.preventDefault();
-
     createRequest({
       name: name.value,
       empId: empId.value,
@@ -42,24 +30,22 @@ if (form) {
       lwd: lwd.value,
       reason: reason.value
     });
-
-    // 🔥 START WORKFLOW AFTER SAVING
-    if (typeof startWorkflow === "function") {
-      startWorkflow();
-    }
-
+    if (typeof startWorkflow === "function") startWorkflow();
     this.reset();
   });
 }
 
-
+// RENDER
 function render() {
   const tbody = document.getElementById("body");
   if (!tbody) return;
-
+  const requests = loadRequests();
   tbody.innerHTML = "";
-
-  loadRequests().forEach(r => {
+  if (requests.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5">No requests found</td></tr>`;
+    return;
+  }
+  requests.forEach(r => {
     tbody.innerHTML += `
       <tr>
         <td>${r.id}</td>
@@ -76,8 +62,20 @@ function render() {
 }
 
 function del(id) {
+  if (!confirm("Are you sure you want to delete this request?")) return;
   const data = loadRequests().filter(r => r.id !== id);
   saveRequests(data);
+  render();
+}
+
+// Optional: Advance Workflow Step
+function advanceStep(id) {
+  const requests = loadRequests();
+  const req = requests.find(r => r.id === id);
+  if (!req || req.status !== "in-progress") return;
+  req.currentStep++;
+  if (req.currentStep >= FLOW.length) req.status = "completed";
+  saveRequests(requests);
   render();
 }
 
