@@ -27,6 +27,32 @@ function createRequest(data) {
   render();
 }
 
+
+// ✅ FORM SUBMIT HANDLER (VERY IMPORTANT)
+const form = document.getElementById("form");
+
+if (form) {
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+
+    createRequest({
+      name: name.value,
+      empId: empId.value,
+      dept: dept.value,
+      lwd: lwd.value,
+      reason: reason.value
+    });
+
+    // 🔥 START WORKFLOW AFTER SAVING
+    if (typeof startWorkflow === "function") {
+      startWorkflow();
+    }
+
+    this.reset();
+  });
+}
+
+
 function render() {
   const tbody = document.getElementById("body");
   if (!tbody) return;
