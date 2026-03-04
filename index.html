@@ -114,14 +114,20 @@
   <!-- FINANCE -->
   <div id="financeSection" class="card approvalSection">
     <h3>Finance Clearance</h3>
+<label>Pending Dues</label>
+<select id="financeDue">
+  <option value="No Due">No Due</option>
+  <option value="Pending Due">Pending Due</option>
+</select>
 
-    <label>Due Amount</label>
-    <select id="financeDue">
-      <option>No Due</option>
-      <option>Pending Due</option>
-    </select>
+<label>Final Settlement Done</label>
+<select id="financeSettlement">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
 
-    <textarea id="financeComment" placeholder="Finance Comment"></textarea>
+<textarea id="financeComment" placeholder="Finance Comment"></textarea>
+  
     <button onclick="approveStep('Finance')" class="approve">Approve</button>
     <button onclick="rejectStep('Finance')" class="reject">Reject</button>
   </div>
@@ -129,16 +135,39 @@
   <!-- IT -->
   <div id="itSection" class="card approvalSection">
     <h3>IT Clearance</h3>
+<label>Assets Returned</label>
+<select id="itAssetReturn">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
 
-    <textarea id="itComment" placeholder="IT Comment"></textarea>
-    <button onclick="approveStep('IT')" class="approve">Approve</button>
-    <button onclick="rejectStep('IT')" class="reject">Reject</button>
+<label>ID Blocked</label>
+<select id="itIdBlocked">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
+
+<textarea id="itComment" placeholder="IT Comment"></textarea>
+<button onclick="approveStep('Finance')" class="approve">Approve</button>
+    <button onclick="rejectStep('Finance')" class="reject">Reject</button>
+
+   
   </div>
 
   <!-- ADMIN -->
   <div id="adminSection" class="card approvalSection">
     <h3>Admin Clearance</h3>
+<label>ID Returned</label>
+<select id="ID rerturn">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
 
+<label>ID Blocked</label>
+<select id="itIdBlocked">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
     <textarea id="adminComment" placeholder="Admin Comment"></textarea>
     <button onclick="approveStep('Admin')" class="approve">Approve</button>
     <button onclick="rejectStep('Admin')" class="reject">Reject</button>
@@ -147,6 +176,17 @@
   <!-- FINAL HR -->
   <div id="finalHrSection" class="card approvalSection">
     <h3>Final HR Closure</h3>
+<label>Exit Interview</label>
+<select id="exitinterview">
+  <option value="No Due">No</option>
+  <option value="Pending Due">Done</option>
+</select>
+
+<label>Final Settlement Done</label>
+<select id="financeSettlement">
+  <option value="Yes">Yes</option>
+  <option value="No">No</option>
+</select>
 
     <textarea id="finalhrComment" placeholder="Final HR Comment"></textarea>
     <button onclick="approveStep('FinalHR')" class="approve">Complete Process</button>
@@ -163,3 +203,4 @@
 
 </body>
 </html>
+
