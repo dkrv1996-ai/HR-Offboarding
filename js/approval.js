@@ -1,7 +1,5 @@
 // approval.js
-
 function approveStep(role) {
-
   // Basic Comment Validation
   let commentBox = document.getElementById(role.toLowerCase() + "Comment");
 
