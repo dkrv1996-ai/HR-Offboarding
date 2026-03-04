@@ -49,28 +49,39 @@ function createRequest() {
   currentRequestId = requestId;
 
   const newRequest = {
-    id: requestId,
-    name: empName,
-    empId: empId,
-    department: empDept,
-    reason: empReason,
-    managerId,
-    financeId,
-    itIdAssign,
-    adminIdAssign,
+  id: requestId,
+  name: empName,
+  empId: empId,
+  department: empDept,
+  reason: empReason,
 
-    managerApproval: "Pending",
-    financeApproval: "Pending",
-    itApproval: "Pending",
-    adminApproval: "Pending",
-    finalHrApproval: "Pending",
-    assetReturn: "-",
+  managerId,
+  financeId,
+  itIdAssign,
+  adminIdAssign,
+  hrIdAssign: document.getElementById("hrIdAssign")?.value || "",
 
-    status: "In Progress",
-    currentStep: 0,
-    pendingWith: FLOW[0],
-    history: []
-  };
+  managerApproval: "Pending",
+  managerRemark: "",
+
+  financeApproval: "Pending",
+  financeRemark: "",
+  settlementDue: "-",
+
+  itApproval: "Pending",
+  itRemark: "",
+  assetReturn: "-",
+  idBlocked: "-",
+
+  finalHrApproval: "Pending",
+  hrRemark: "",
+  finalSettlement: "-",
+
+  status: "In Progress",
+  currentStep: 0,
+  pendingWith: FLOW[0],
+  history: []
+};
 
   const requests = loadRequests();
   requests.push(newRequest);
@@ -229,3 +240,4 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
