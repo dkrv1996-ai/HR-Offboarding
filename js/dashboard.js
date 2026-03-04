@@ -31,41 +31,120 @@ function printRequest(id) {
   if (request.history && request.history.length > 0) {
     request.history.forEach(h => {
       historyHTML += `
-        <p>
-          <strong>${h.by}</strong> - ${h.action}<br>
-          Notes: ${h.notes || "-"}<br>
-          Date: ${new Date(h.at).toLocaleString()}
-        </p>
-        <hr>
+        <tr>
+          <td>${h.by}</td>
+          <td>${h.action}</td>
+          <td>${h.notes || "-"}</td>
+          <td>${new Date(h.at).toLocaleString()}</td>
+        </tr>
       `;
     });
   }
 
-  const printWindow = window.open("", "", "width=800,height=600");
+  const printWindow = window.open("", "", "width=900,height=700");
 
   printWindow.document.write(`
     <html>
-      <head>
-        <title>Print Exit Request</title>
-      </head>
-      <body>
-        <h2>Employee Exit Request</h2>
-        <p><strong>ID:</strong> ${request.id}</p>
-        <p><strong>Name:</strong> ${request.name}</p>
-        <p><strong>Employee ID:</strong> ${request.empId}</p>
-        <p><strong>Department:</strong> ${request.department}</p>
-        <p><strong>Reason:</strong> ${request.reason}</p>
-        <p><strong>Status:</strong> ${request.status}</p>
-        <hr>
-        <h3>Approval History</h3>
+    <head>
+      <title>Exit Clearance Document</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          padding: 30px;
+          position: relative;
+        }
+
+        h2 {
+          text-align: center;
+        }
+
+        .confidential {
+          text-align: center;
+          color: red;
+          font-weight: bold;
+          letter-spacing: 2px;
+          margin-bottom: 10px;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 15px;
+        }
+
+        table, th, td {
+          border: 1px solid #000;
+        }
+
+        th, td {
+          padding: 8px;
+          text-align: left;
+          font-size: 14px;
+        }
+
+        .footer {
+          margin-top: 40px;
+          text-align: center;
+          font-style: italic;
+        }
+
+        .watermark {
+          position: fixed;
+          top: 40%;
+          left: 20%;
+          font-size: 60px;
+          color: rgba(200, 200, 200, 0.2);
+          transform: rotate(-30deg);
+          z-index: -1;
+        }
+      </style>
+    </head>
+    <body>
+
+      <div class="watermark">CONFIDENTIAL</div>
+
+      <div class="confidential">CONFIDENTIAL DOCUMENT</div>
+
+      <h2>Employee Exit Clearance Form</h2>
+
+      <table>
+        <tr><th>ID</th><td>${request.id}</td></tr>
+        <tr><th>Name</th><td>${request.name}</td></tr>
+        <tr><th>Employee ID</th><td>${request.empId}</td></tr>
+        <tr><th>Department</th><td>${request.department}</td></tr>
+        <tr><th>Reason</th><td>${request.reason}</td></tr>
+        <tr><th>Manager Approval</th><td>${request.managerApproval || "-"}</td></tr>
+        <tr><th>IT Clearance</th><td>${request.itApproval || "-"}</td></tr>
+        <tr><th>Asset Returned</th><td>${request.assetReturn || "-"}</td></tr>
+        <tr><th>Finance Clearance</th><td>${request.financeApproval || "-"}</td></tr>
+        <tr><th>HR Approval</th><td>${request.hrApproval || "-"}</td></tr>
+        <tr><th>Final Status</th><td>${request.status}</td></tr>
+      </table>
+
+      <h3>Approval History</h3>
+      <table>
+        <tr>
+          <th>Approved By</th>
+          <th>Action</th>
+          <th>Remarks</th>
+          <th>Date</th>
+        </tr>
         ${historyHTML}
-      </body>
+      </table>
+
+      <div class="footer">
+        This document is system generated and confidential.<br><br>
+        Please provide digital signature for final confirmation.
+      </div>
+
+    </body>
     </html>
   `);
 
   printWindow.document.close();
   printWindow.print();
 }
+
 
 function viewRequest(id) {
   window.location.href = "view.html?id=" + id;
@@ -109,5 +188,6 @@ function renderDashboard() {
 }
 
 renderDashboard();
+
 
 
