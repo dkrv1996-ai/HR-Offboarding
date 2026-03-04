@@ -47,9 +47,6 @@ if (request.history && request.history.length > 0) {
   });
 }
 
-document.getElementById("history").innerHTML = historyHTML;
-
-
   const printWindow = window.open("", "", "width=900,height=700");
 
   printWindow.document.write(`
@@ -197,6 +194,7 @@ function renderDashboard() {
 }
 
 renderDashboard();
+
 
 
 
