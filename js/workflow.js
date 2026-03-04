@@ -168,6 +168,14 @@ function nextStep(role) {
     request.finalSettlement = document.getElementById("finalSettlement")?.value || "-";
   }
 
+  // ✅ VERY IMPORTANT — ADD HISTORY PROPERLY
+  request.history.push({
+    by: role,
+    action: "Approved",
+    notes: remarks,
+    at: new Date().toISOString()
+  });
+
   currentStepIndex++;
   request.currentStep = currentStepIndex;
 
@@ -188,24 +196,13 @@ function nextStep(role) {
 // =============================
 function rejectProcess(role) {
 
-  if (!currentRequestId) return;
-
   const requests = loadRequests();
   const request = requests.find(r => r.id === currentRequestId);
-
   if (!request) return;
 
-  const remarksField = document.getElementById(role + "Remarks");
-  const remarks = remarksField ? remarksField.value : "";
-
-  if (role === "Manager") request.managerApproval = "Rejected";
-  if (role === "Finance") request.financeApproval = "Rejected";
-  if (role === "IT") request.itApproval = "Rejected";
-  if (role === "Admin") request.adminApproval = "Rejected";
-  if (role === "FinalHR") request.finalHrApproval = "Rejected";
+  const remarks = document.getElementById(role + "Remarks")?.value || "";
 
   request.status = "Rejected";
-  request.pendingWith = role;
 
   request.history.push({
     by: role,
@@ -215,6 +212,7 @@ function rejectProcess(role) {
   });
 
   saveRequests(requests);
+}
 
   alert(role + " rejected the request.");
   hideAllSections();
@@ -248,5 +246,6 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
 
 
