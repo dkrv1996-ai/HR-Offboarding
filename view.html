@@ -1,34 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>View Exit Requests</title>
+  <title>Exit Request Details</title>
   <style>
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
-    tr.remark { font-size: 0.9em; background: #f9f9f9; }
-    button { margin: 2px; }
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      font-size: 12px;
+    }
+
+    .approved { background: #16a34a; }
+    .rejected { background: #dc2626; }
+    .in-progress { background: #f59e0b; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 15px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <h2>All Exit Requests</h2>
+
+  <h2>Exit Request Details</h2>
+
   <button onclick="window.print()">Print</button>
+
+  <div class="card" id="details"></div>
+
+  <h3>Approval History</h3>
   <table>
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Emp ID</th>
-        <th>Dept</th>
-        <th>LWD</th>
-        <th>Reason</th>
-        <th>Status</th>
+        <th>Role</th>
         <th>Action</th>
+        <th>Comment</th>
+        <th>Date</th>
       </tr>
     </thead>
-    <tbody id="body">
-      <!-- JS will populate requests and comments here -->
-    </tbody>
+    <tbody id="historyBody"></tbody>
   </table>
+
   <script src="view.js"></script>
 </body>
 </html>
