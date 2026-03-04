@@ -1,35 +1,17 @@
-// =============================
+// workflow.js
+
 // AUTH CHECK
-// =============================
 const user = localStorage.getItem("loggedInUser");
+if (!user) window.location.href = "login.html";
 
-if (!user) {
-  window.location.href = "login.html";
-}
-
-// =============================
-// FLOW CONFIG
-// =============================
 const FLOW = ["Manager", "Finance", "IT", "Admin", "FinalHR"];
 let currentStepIndex = -1;
 let currentRequestId = null;
 
 // =============================
-// LOAD & SAVE HELPERS
-// =============================
-function loadRequests() {
-  return JSON.parse(localStorage.getItem("exitRequests") || "[]");
-}
-
-function saveRequests(data) {
-  localStorage.setItem("exitRequests", JSON.stringify(data));
-}
-
-// =============================
 // CREATE REQUEST
 // =============================
 function createRequest() {
-
   const empName = document.getElementById("empName").value.trim();
   const empId = document.getElementById("empId").value.trim();
   const empDept = document.getElementById("empDept").value.trim();
@@ -49,43 +31,30 @@ function createRequest() {
   currentRequestId = requestId;
 
   const newRequest = {
-  id: requestId,
-  name: empName,
-  empId: empId,
-  department: empDept,
-  reason: empReason,
+    id: requestId,
+    name: empName,
+    empId: empId,
+    department: empDept,
+    reason: empReason,
+    managerId,       // email
+    financeId,       // email
+    itIdAssign,      // email
+    adminIdAssign,   // email
+    managerApproval: "Pending",
+    itApproval: "Pending",
+    financeApproval: "Pending",
+    hrApproval: "Pending",
+    assetReturn: "-",
+    status: "In Progress",
+    lastApprovedBy: "",
+    currentStep: 0,
+    pendingWith: FLOW[0],
+    history: []
+  };
 
-  managerId,
-  financeId,
-  itIdAssign,
-  adminIdAssign,
-  hrIdAssign: document.getElementById("hrIdAssign")?.value || "",
-
-  managerApproval: "Pending",
-  managerRemark: "",
-
-  financeApproval: "Pending",
-  financeRemark: "",
-  settlementDue: "-",
-
-  itApproval: "Pending",
-  itRemark: "",
-  assetReturn: "-",
-  idBlocked: "-",
-
-  finalHrApproval: "Pending",
-  hrRemark: "",
-  finalSettlement: "-",
-
-  status: "In Progress",
-  currentStep: 0,
-  pendingWith: FLOW[0],
-  history: []
-};
-
-  const requests = loadRequests();
+  let requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
   requests.push(newRequest);
-  saveRequests(requests);
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
 
   alert("Exit Request Created Successfully");
   startWorkflow();
@@ -103,16 +72,11 @@ function startWorkflow() {
 // SHOW CURRENT STEP
 // =============================
 function showCurrentStep() {
-
   hideAllSections();
-
   if (currentStepIndex >= FLOW.length) {
     completeProcess();
     return;
   }
-
-  const step = FLOW[currentStepIndex];
-
   const sectionMap = {
     "Manager": "managerSection",
     "Finance": "financeSection",
@@ -120,9 +84,7 @@ function showCurrentStep() {
     "Admin": "adminSection",
     "FinalHR": "finalHrSection"
   };
-
-  const section = document.getElementById(sectionMap[step]);
-
+  const section = document.getElementById(sectionMap[FLOW[currentStepIndex]]);
   if (section) {
     section.style.display = "block";
     section.scrollIntoView({ behavior: "smooth" });
@@ -130,116 +92,86 @@ function showCurrentStep() {
 }
 
 // =============================
-// APPROVE STEP
+// NEXT STEP / APPROVE
 // =============================
-function nextStep(role) {
+function approveStep() {
+  if (!currentRequestId) return;
 
-  const requests = loadRequests();
-  const request = requests.find(r => r.id === currentRequestId);
+  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  let request = requests.find(r => r.id === currentRequestId);
   if (!request) return;
 
-  const remarks = document.getElementById(role + "Remarks")?.value || "";
+  const step = FLOW[currentStepIndex];
+  const remarksField = document.getElementById(`${step.toLowerCase()}Remarks`);
+  const remarks = remarksField ? remarksField.value.trim() : "-";
 
-  // MANAGER
-  if (role === "Manager") {
-    request.managerApproval = "Approved";
-    request.managerRemark = remarks;
+  switch (step) {
+    case "Manager":
+      request.managerApproval = "Approved";
+      request.lastApprovedBy = request.managerId;
+      break;
+    case "Finance":
+      request.financeApproval = "Approved";
+      request.lastApprovedBy = request.financeId;
+      break;
+    case "IT":
+      request.itApproval = "Approved";
+      request.lastApprovedBy = request.itIdAssign;
+      break;
+    case "Admin":
+    case "FinalHR":
+      request.hrApproval = "Approved";
+      request.lastApprovedBy = request.adminIdAssign;
+      break;
   }
 
-  // IT
-  if (role === "IT") {
-    request.itApproval = "Approved";
-    request.itRemark = remarks;
-    request.assetReturn = document.getElementById("assetReturn")?.value || "-";
-    request.idBlocked = document.getElementById("idBlocked")?.value || "-";
-  }
-
-  // FINANCE
-  if (role === "Finance") {
-    request.financeApproval = "Approved";
-    request.financeRemark = remarks;
-    request.settlementDue = document.getElementById("settlementDue")?.value || "-";
-  }
-
-  // HR
-  if (role === "FinalHR") {
-    request.finalHrApproval = "Approved";
-    request.hrRemark = remarks;
-    request.finalSettlement = document.getElementById("finalSettlement")?.value || "-";
-  }
-
-  // ✅ VERY IMPORTANT — ADD HISTORY PROPERLY
   request.history.push({
-    by: role,
-    action: "Approved",
+    by: request.lastApprovedBy,
+    action: `${step} Approved`,
     notes: remarks,
-    at: new Date().toISOString()
+    at: new Date()
   });
 
   currentStepIndex++;
   request.currentStep = currentStepIndex;
+  request.pendingWith = currentStepIndex < FLOW.length ? FLOW[currentStepIndex] : "Completed";
+  if (currentStepIndex >= FLOW.length) request.status = "Approved";
 
-  if (currentStepIndex >= FLOW.length) {
-    request.status = "Approved";
-    request.pendingWith = "Completed";
-  } else {
-    request.pendingWith = FLOW[currentStepIndex];
-  }
-
-  saveRequests(requests);
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
   showCurrentStep();
 }
 
-
 // =============================
-// REJECT STEP
+// REJECT PROCESS
 // =============================
 function rejectProcess(role) {
+  if (!currentRequestId) return;
 
-  const requests = loadRequests();
-  const request = requests.find(r => r.id === currentRequestId);
+  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  let request = requests.find(r => r.id === currentRequestId);
   if (!request) return;
 
-  const remarks = document.getElementById(role + "Remarks")?.value || "";
+  const remarksField = document.getElementById(`${role.toLowerCase()}Remarks`);
+  const remarks = remarksField ? remarksField.value.trim() : "-";
 
   request.status = "Rejected";
+  request.pendingWith = role;
+  request.lastApprovedBy = request[`${role.toLowerCase()}Id`] || "-";
 
   request.history.push({
-    by: role,
-    action: "Rejected",
+    by: request.lastApprovedBy,
+    action: `${role} Rejected`,
     notes: remarks,
-    at: new Date().toISOString()
+    at: new Date()
   });
 
-  saveRequests(requests);
-}
-
-  alert(role + " rejected the request.");
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
   hideAllSections();
-
-
-// =============================
-// COMPLETE PROCESS
-// =============================
-function completeProcess() {
-
-  const requests = loadRequests();
-  const request = requests.find(r => r.id === currentRequestId);
-
-  if (!request) return;
-
-  request.status = "Approved";
-  request.pendingWith = "Completed";
-  request.currentStep = FLOW.length;
-
-  saveRequests(requests);
-
-  alert("Exit Process Completed Successfully!");
-  hideAllSections();
+  alert(`${role} rejected the request.`);
 }
 
 // =============================
-// HIDE SECTIONS
+// HIDE ALL SECTIONS
 // =============================
 function hideAllSections() {
   document.querySelectorAll(".approvalSection").forEach(sec => {
@@ -247,6 +179,10 @@ function hideAllSections() {
   });
 }
 
-
-
-
+// =============================
+// LOGOUT
+// =============================
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
