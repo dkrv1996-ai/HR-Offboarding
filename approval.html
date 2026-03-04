@@ -1,24 +1,79 @@
-<!-- approval.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Exit Approval</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .department { border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+    .department label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .department input[type="text"] { width: 100%; padding: 5px; margin-bottom: 10px; }
+    .department button { padding: 5px 10px; margin-right: 5px; cursor: pointer; }
+    .approveBtn { background-color: #4CAF50; color: white; border: none; border-radius: 3px; }
+    .rejectBtn { background-color: #f44336; color: white; border: none; border-radius: 3px; }
+    h2 { text-align: center; }
+  </style>
+</head>
+<body>
+
+<h2>Employee Exit Approval</h2>
+
+<!-- Approval Section -->
 <div id="approvalSection" data-request-id="REQ123">
+
+  <!-- Manager -->
   <div class="department" data-role="Manager">
-    <label>Comment:</label>
-    <input type="text" id="managerComment">
+    <label>Manager Comment:</label>
+    <input type="text" id="managerComment" placeholder="Enter comment">
     <button class="approveBtn">Approve</button>
     <button class="rejectBtn">Reject</button>
   </div>
 
+  <!-- IT -->
+  <div class="department" data-role="IT">
+    <label>IT Comment:</label>
+    <input type="text" id="itComment" placeholder="Enter comment">
+    <button class="approveBtn">Approve</button>
+    <button class="rejectBtn">Reject</button>
+  </div>
+
+  <!-- Finance -->
   <div class="department" data-role="Finance">
-    <label>Comment:</label>
-    <input type="text" id="financeComment">
+    <label>Finance Comment:</label>
+    <input type="text" id="financeComment" placeholder="Enter comment">
     <input type="hidden" id="financeDue" value="No Pending">
     <button class="approveBtn">Approve</button>
     <button class="rejectBtn">Reject</button>
   </div>
 
-  <div class="department" data-role="IT">
-    <label>Comment:</label>
-    <input type="text" id="itComment">
+  <!-- Admin -->
+  <div class="department" data-role="Admin">
+    <label>Admin Comment:</label>
+    <input type="text" id="adminComment" placeholder="Enter comment">
     <button class="approveBtn">Approve</button>
     <button class="rejectBtn">Reject</button>
   </div>
+
+  <!-- HR -->
+  <div class="department" data-role="HR">
+    <label>HR Comment:</label>
+    <input type="text" id="hrComment" placeholder="Enter comment">
+    <button class="approveBtn">Approve</button>
+    <button class="rejectBtn">Reject</button>
+  </div>
+
+  <!-- Final HR -->
+  <div class="department" data-role="Final HR">
+    <label>Final HR Comment:</label>
+    <input type="text" id="finalHrComment" placeholder="Enter comment">
+    <button class="approveBtn">Approve</button>
+    <button class="rejectBtn">Reject</button>
+  </div>
+
 </div>
+
+<!-- Include Approval JS -->
+<script src="js/approval.js"></script>
+
+</body>
+</html>
