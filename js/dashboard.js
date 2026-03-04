@@ -43,10 +43,10 @@ function printRequest(id) {
       <body>
         <h2>Employee Exit Request</h2>
         <p><strong>ID:</strong> ${request.id}</p>
-        <p><strong>Name:</strong> ${request.data.name}</p>
-        <p><strong>Employee ID:</strong> ${request.data.empId}</p>
-        <p><strong>Department:</strong> ${request.data.dept}</p>
-        <p><strong>Reason:</strong> ${request.data.reason}</p>
+        <p><strong>Name:</strong> ${request.name}</p>
+        <p><strong>Employee ID:</strong> ${request.empId}</p>
+        <p><strong>Department:</strong> ${request.department}</p>
+        <p><strong>Reason:</strong> ${request.reason}</p>
         <p><strong>Status:</strong> ${request.status}</p>
         <hr>
         <h3>Approval History</h3>
@@ -79,10 +79,10 @@ function renderDashboard() {
     tbody.innerHTML += `
       <tr>
         <td>${r.id}</td>
-        <td>${r.data.name}</td>
-        <td>${r.data.empId}</td>
-        <td>${r.data.dept}</td>
-        <td>${r.data.reason}</td>
+        <td>${r.name}</td>
+        <td>${r.empId}</td>
+        <td>${r.department}</td>
+        <td>${r.reason}</td>
         <td>${r.status}</td>
         <td>
           <button onclick="viewRequest('${r.id}')">View</button>
@@ -91,21 +91,6 @@ function renderDashboard() {
         </td>
       </tr>
     `;
-
-    if (r.history && r.history.length > 0) {
-      r.history.forEach(h => {
-        tbody.innerHTML += `
-          <tr style="background:#f9f9f9;font-size:14px;">
-            <td colspan="2">By: ${h.by}</td>
-            <td colspan="2">Action: ${h.action}</td>
-            <td colspan="3">
-              Notes: ${h.notes || "-"}<br>
-              At: ${new Date(h.at).toLocaleString()}
-            </td>
-          </tr>
-        `;
-      });
-    }
   });
 }
 
