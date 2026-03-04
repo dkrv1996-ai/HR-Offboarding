@@ -2,13 +2,14 @@
 <html>
 <head>
   <title>Employee Exit Management System</title>
-  <link rel="stylesheet" href="css/style.css">
+
   <style>
     body {
       font-family: Arial;
       margin: 0;
       background: #f4f6f9;
     }
+
     .nav {
       background: #1f2937;
       padding: 15px;
@@ -63,31 +64,7 @@
 </div>
 
 <div class="container">
-<!-- Dashbaord -->
 
-<div id="dashboardSection" style="margin-bottom:20px; padding:15px; border:1px solid #ccc;">
-  <h3>HR Exit Dashboard</h3>
-
-  <p>Total Exit Requests: <span id="totalRequests">0</span></p>
-
-  <button onclick="location.href='view.html?id=${r.id}'">Open</button>
-  
-<button onclick="location.href='form.html'">Create New Request</button>
-
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Status</th>
-      <th>Current Step</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody id="body"></tbody>
-</table>
-</div>
-  
   <!-- CREATE REQUEST -->
   <div class="card">
     <h3>Create Exit Request</h3>
@@ -100,35 +77,31 @@
 
     <label>Department</label>
     <input type="text" id="empDept">
-    
-<label>Manager ID</label>
-<input type="text" id="managerId">
 
-<label>Finance Officer ID</label>
-<input type="text" id="financeId">
+    <label>Manager ID</label>
+    <input type="text" id="managerId">
 
-<label>IT Officer ID</label>
-<input type="text" id="itIdAssign">
+    <label>Finance Officer ID</label>
+    <input type="text" id="financeId">
 
-<label>Admin Officer ID</label>
-<input type="text" id="adminIdAssign">
+    <label>IT Officer ID</label>
+    <input type="text" id="itIdAssign">
+
+    <label>Admin Officer ID</label>
+    <input type="text" id="adminIdAssign">
 
     <label>Reason for Exit</label>
-    <label>Reason for Exit</label>
-<select id="empReason">
-  <option value="">-- Select Reason --</option>
-  <option>Resignation</option>
-  <option>Termination</option>
-  <option>Retirement</option>
-</select>
+    <select id="empReason">
+      <option value="">-- Select Reason --</option>
+      <option>Resignation</option>
+      <option>Termination</option>
+      <option>Retirement</option>
+    </select>
 
-
- <button type="button" onclick="createRequest()" class="approve">
-  Submit Request
-</button>
-
+    <button type="button" onclick="createRequest()" class="approve">
+      Submit Request
+    </button>
   </div>
-
 
   <!-- MANAGER -->
   <div id="managerSection" class="card approvalSection">
@@ -137,7 +110,6 @@
     <button onclick="approveStep('Manager')" class="approve">Approve</button>
     <button onclick="rejectStep('Manager')" class="reject">Reject</button>
   </div>
-
 
   <!-- FINANCE -->
   <div id="financeSection" class="card approvalSection">
@@ -149,153 +121,45 @@
       <option>Pending Due</option>
     </select>
 
-    <label>Settlement Completed</label>
-    <select id="financeSettlement">
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-
     <textarea id="financeComment" placeholder="Finance Comment"></textarea>
     <button onclick="approveStep('Finance')" class="approve">Approve</button>
     <button onclick="rejectStep('Finance')" class="reject">Reject</button>
   </div>
 
-
   <!-- IT -->
   <div id="itSection" class="card approvalSection">
     <h3>IT Clearance</h3>
-
-    <label>ID Blocked</label>
-    <select id="itId">
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-
-    <label>Laptop Returned</label>
-    <select id="itLaptop">
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-
-    <label>ERP Blocked</label>
-    <select id="itErp">
-      <option>Yes</option>
-      <option>No</option>
-    </select>
 
     <textarea id="itComment" placeholder="IT Comment"></textarea>
     <button onclick="approveStep('IT')" class="approve">Approve</button>
     <button onclick="rejectStep('IT')" class="reject">Reject</button>
   </div>
 
-
   <!-- ADMIN -->
   <div id="adminSection" class="card approvalSection">
     <h3>Admin Clearance</h3>
-
-    <label>ID Card Collected</label>
-    <select id="adminId">
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-
-    <label>Entry Blocked</label>
-    <select id="adminEntry">
-      <option>Yes</option>
-      <option>No</option>
-    </select>
 
     <textarea id="adminComment" placeholder="Admin Comment"></textarea>
     <button onclick="approveStep('Admin')" class="approve">Approve</button>
     <button onclick="rejectStep('Admin')" class="reject">Reject</button>
   </div>
 
-
   <!-- FINAL HR -->
   <div id="finalHrSection" class="card approvalSection">
     <h3>Final HR Closure</h3>
 
-    <label>Exit Interview Done</label>
-    <select id="hrExit">
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-
-    <label>Experience Letter Issued</label>
-    <select id="hrLetter">
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-
-    <textarea id="hrComment" placeholder="Final HR Comment"></textarea>
+    <textarea id="finalhrComment" placeholder="Final HR Comment"></textarea>
     <button onclick="approveStep('FinalHR')" class="approve">Complete Process</button>
   </div>
 
+  <br>
+  <a href="dashboard.html">Go To Dashboard</a>
+
 </div>
 
-
-<script>
-
-let currentStep = "";
-
-function createRequest() {
-
-  if (!empName.value || !empId.value || !empDept.value) {
-    alert("Please fill all required fields.");
-    return;
-  }
-
-  alert("Exit Request Created Successfully");
-updateDashboard(); 
-
-  startWorkflow();
-}
-
-function approveStep(role) {
-
-  if(role === "Manager") {
-    document.getElementById("financeSection").style.display = "block";
-  }
-
-  else if(role === "Finance") {
-    document.getElementById("itSection").style.display = "block";
-  }
-
-  else if(role === "IT") {
-    document.getElementById("adminSection").style.display = "block";
-  }
-
-  else if(role === "Admin") {
-    document.getElementById("finalHrSection").style.display = "block";
-  }
-
-  else if(role === "FinalHR") {
-    alert("Exit Process Completed Successfully!");
-  }
-}
-
-function rejectStep(role) {
-  alert(role + " Rejected the Request");
-}
-
-</script>
-  
-  <script src="js/workflow.js"></script>
+<!-- LOAD JS FILES -->
+<script src="js/workflow.js"></script>
 <script src="js/approval.js"></script>
-  <script src="js/dashboard.js"></script>
-
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
