@@ -71,6 +71,21 @@
   <p>Total Exit Requests: <span id="totalRequests">0</span></p>
 
   <button onclick="location.href='view.html?id=${r.id}'">Open</button>
+  
+<button onclick="location.href='form.html'">Create New Request</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Current Step</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="body"></tbody>
+</table>
 </div>
   
   <!-- CREATE REQUEST -->
@@ -272,6 +287,7 @@ function rejectStep(role) {
 
 </body>
 </html>
+
 
 
 
