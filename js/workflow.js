@@ -216,7 +216,7 @@ function rejectProcess(role) {
 
   alert(role + " rejected the request.");
   hideAllSections();
-}
+
 
 // =============================
 // COMPLETE PROCESS
@@ -246,6 +246,7 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
 
 
 
