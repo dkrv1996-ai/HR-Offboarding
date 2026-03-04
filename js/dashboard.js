@@ -71,6 +71,12 @@ function viewRequest(id) {
   window.location.href = "view.html?id=" + id;
 }
 
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+
 function renderDashboard() {
   const tbody = document.getElementById("body");
   if (!tbody) return;
@@ -103,4 +109,5 @@ function renderDashboard() {
 }
 
 renderDashboard();
+
 
