@@ -12,7 +12,6 @@ function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
-
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
@@ -106,7 +105,6 @@ function printRequest() {
     </body>
     </html>
   `);
-
   printWindow.document.close();
   printWindow.print();
 }
