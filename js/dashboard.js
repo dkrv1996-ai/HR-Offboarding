@@ -71,18 +71,43 @@ function printRequest(id) {
         <div class="watermark">CONFIDENTIAL</div>
         <h2>Employee Exit Clearance Form</h2>
         <table>
-          <tr><th>ID</th><td>${request.id}</td></tr>
-          <tr><th>Name</th><td>${request.name}</td></tr>
-          <tr><th>Employee ID</th><td>${request.empId}</td></tr>
-          <tr><th>Department</th><td>${request.department}</td></tr>
-          <tr><th>Reason</th><td>${request.reason}</td></tr>
-          <tr><th>Manager Approval</th><td>${request.managerApproval || "-"}</td></tr>
-          <tr><th>IT Clearance</th><td>${request.itApproval || "-"}</td></tr>
-          <tr><th>Asset Returned</th><td>${request.assetReturn || "-"}</td></tr>
-          <tr><th>Finance Clearance</th><td>${request.financeApproval || "-"}</td></tr>
-          <tr><th>HR Approval</th><td>${request.hrApproval || "-"}</td></tr>
-          <tr><th>Final Status</th><td>${request.status || "-"}</td></tr>
-          <tr><th>Last Approved By</th><td>${request.lastApprovedBy || "-"}</td></tr>
+         <table>
+  <tr><th>ID</th><td>${request.id}</td></tr>
+  <tr><th>Name</th><td>${request.name}</td></tr>
+  <tr><th>Employee ID</th><td>${request.empId}</td></tr>
+  <tr><th>Department</th><td>${request.department}</td></tr>
+  <tr><th>Reason</th><td>${request.reason}</td></tr>
+
+  <!-- Manager -->
+  <tr><th>Manager Approval</th><td>${request.managerApproval || "-"}</td></tr>
+  <tr><th>Manager Remarks</th><td>${request.managerRemarks || "-"}</td></tr>
+
+  <!-- IT -->
+  <tr><th>IT Approval</th><td>${request.itApproval || "-"}</td></tr>
+  <tr><th>IT Remarks</th><td>${request.itRemarks || "-"}</td></tr>
+
+  <!-- Finance -->
+  <tr><th>Finance Approval</th><td>${request.financeApproval || "-"}</td></tr>
+  <tr><th>Finance Remarks</th><td>${request.financeRemarks || "-"}</td></tr>
+  <tr><th>Finance Due Status</th><td>${request.financeDue || "-"}</td></tr>
+
+  <!-- Admin -->
+  <tr><th>Admin Approval</th><td>${request.adminApproval || "-"}</td></tr>
+  <tr><th>Admin Remarks</th><td>${request.adminRemarks || "-"}</td></tr>
+
+  <!-- HR -->
+  <tr><th>HR Approval</th><td>${request.hrApproval || "-"}</td></tr>
+  <tr><th>HR Remarks</th><td>${request.hrRemarks || "-"}</td></tr>
+
+  <!-- Final HR -->
+  <tr><th>Final HR Approval</th><td>${request.finalHrApproval || "-"}</td></tr>
+  <tr><th>Final HR Remarks</th><td>${request.finalHrRemarks || "-"}</td></tr>
+
+  <!-- Final status -->
+  <tr><th>Final Status</th><td>${request.status || "-"}</td></tr>
+  <tr><th>Last Approved By</th><td>${request.lastApprovedBy || "-"}</td></tr>
+</table>
+
         </table>
 
         <h3>Approval History</h3>
@@ -141,3 +166,4 @@ function renderDashboard() {
 
 // Initial render
 renderDashboard();
+
