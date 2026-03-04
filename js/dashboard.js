@@ -60,6 +60,8 @@ function render() {
     `;
   });
 }
+  // ✅ Update total requests count
+  if(totalSpan) totalSpan.textContent = requests.length;
 
 function del(id) {
   if (!confirm("Are you sure you want to delete this request?")) return;
@@ -80,4 +82,5 @@ function advanceStep(id) {
 }
 
 render();
+
 
