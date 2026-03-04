@@ -62,7 +62,7 @@ function createRequest() {
   };
 
   // Save to localStorage
-  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  let requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
   requests.push(newRequest);
   localStorage.setItem("exitRequests", JSON.stringify(requests));
 
@@ -185,3 +185,4 @@ function hideAllSections() {
     sec.style.display = "none";
   });
 }
+
