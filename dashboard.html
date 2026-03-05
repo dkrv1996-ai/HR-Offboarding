@@ -1,116 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Exit Requests Dashboard</title>
-
+  <title>Employee Exit Dashboard</title>
   <style>
-    body {
-      font-family: Arial;
-      margin: 0;
-      background: #f4f6f9;
-    }
-    .nav {
-      background: #1f2937;
-      padding: 15px;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .container {
-      padding: 20px;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    .card {
-      background: white;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 8px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: center;
-    }
-
-    th {
-      background: #f1f1f1;
-    }
-
-    button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin: 2px;
-    }
-
-    .viewBtn {
-      background: #007bff;
-      color: white;
-    }
-
-    .deleteBtn {
-      background: #dc3545;
-      color: white;
-    }
-
-    .remarkRow {
-      background: #fafafa;
-      font-size: 14px;
-    }
-
-    .backLink {
-      margin-top: 20px;
-      display: inline-block;
-    }
-
+    body { font-family: Arial; background: #f4f6f9; margin: 0; padding: 0; }
+    .nav { background: #1f2937; color: white; padding: 15px; font-size: 18px; font-weight: bold; }
+    .container { padding: 20px; max-width: 1200px; margin: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 14px; }
+    th { background: #ddd; }
+    button { padding: 5px 10px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }
+    .approve { background: #28a745; color: white; }
+    .reject { background: #dc3545; color: white; }
   </style>
 </head>
-
 <body>
-
-<div class="nav">
-  Exit Requests Dashboard
-   <button class="logout-btn" onclick="logout()">Logout</button>
-</div>
-
+<div class="nav">Employee Exit Dashboard</div>
 <div class="container">
-  <div class="card">
-    <h3>All Exit Requests</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Employee ID</th>
+        <th>Department</th>
+        <th>Reason</th>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Employee ID</th>
-          <th>Department</th>
-          <th>Reason</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="body">
-      </tbody>
-    </table>
+        <th>Manager Approval</th>
+        <th>Manager Remarks</th>
 
-    <a href="index.html" class="backLink">← Back to Home</a>
+        <th>IT Approval</th>
+        <th>IT Remarks</th>
 
-  </div>
+        <th>Finance Approval</th>
+        <th>Finance Remarks</th>
+
+        <th>Admin Approval</th>
+        <th>Admin Remarks</th>
+
+        <th>Final HR Approval</th>
+        <th>Final HR Remarks</th>
+
+        <th>Status</th>
+        <th>Last Approved By</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="body"></tbody>
+  </table>
 </div>
 
 <script src="js/dashboard.js"></script>
-
 </body>
 </html>
