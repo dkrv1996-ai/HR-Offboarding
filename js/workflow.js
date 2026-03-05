@@ -59,7 +59,6 @@ function createRequest() {
   alert("Exit Request Created Successfully");
   startWorkflow();
 }
-
 // =============================
 // START WORKFLOW
 // =============================
@@ -189,5 +188,6 @@ function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
+
 
 
