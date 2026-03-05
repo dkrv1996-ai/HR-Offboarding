@@ -1,142 +1,262 @@
 // ================= AUTH CHECK =================
 const user = localStorage.getItem("loggedInUser");
-if (!user) window.location.href = "login.html";
+if (!user) {
+  window.location.href = "index.html"; // redirect to request creation if not logged in
+}
 
-// ================= GET CURRENT REQUEST =================
+// ================= GET REQUEST =================
 const params = new URLSearchParams(window.location.search);
 const currentRequestId = params.get("id");
-
-let requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
-let request = requests.find(r => r.id === currentRequestId);
+const requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
+const request = requests.find(r => r.id === currentRequestId);
 
 if (!request) {
   alert("Request not found");
   window.location.href = "dashboard.html";
 }
 
-// ================= SHOW CURRENT APPROVAL SECTION =================
-function showSection(role) {
-  const sections = ['manager', 'it', 'finance', 'admin', 'finalHr'];
-  sections.forEach(sec => {
-    const el = document.getElementById(sec + 'Section');
-    if(el) el.style.display = 'none';
-  });
+// ================= FILL DATA =================
+document.getElementById("id").innerText = request.id;
+document.getElementById("name").innerText = request.name;
+document.getElementById("empId").innerText = request.empId;
+document.getElementById("dept").innerText = request.department;
+document.getElementById("reason").innerText = request.reason;
 
-  switch(role) {
-    case 'Manager': document.getElementById('managerSection').style.display = 'block'; break;
-    case 'IT': document.getElementById('itSection').style.display = 'block'; break;
-    case 'Finance': document.getElementById('financeSection').style.display = 'block'; break;
-    case 'Admin': document.getElementById('adminSection').style.display = 'block'; break;
-    case 'FinalHR': document.getElementById('finalHrSection').style.display = 'block'; break;
+// APPROVAL STATUS
+document.getElementById("manager").innerText = request.managerApproval || "Pending";
+document.getElementById("it").innerText = request.itApproval || "Pending";
+document.getElementById("finance").innerText = request.financeApproval || "Pending";
+document.getElementById("admin").innerText = request.adminApproval || "Pending";
+document.getElementById("finalHr").innerText = request.finalHrApproval || "Pending";
+
+document.getElementById("asset").innerText = request.assetReturn || "-";
+document.getElementById("status").innerText = request.status;
+
+// ================= LOAD HISTORY =================
+function renderHistory() {
+  const historyDiv = document.getElementById("history");
+  let historyHTML = "";
+  if (request.history && request.history.length > 0) {
+    request.history.forEach(h => {
+      historyHTML += `
+        <p>
+          <strong>${h.role}</strong> - ${h.action}<br>
+          Remark: ${h.comment || "-"}<br>
+          Date: ${new Date(h.date).toLocaleString()}
+        </p>
+        <hr>
+      `;
+    });
   }
+  historyDiv.innerHTML = historyHTML;
 }
+renderHistory();
 
-// ================= DETERMINE NEXT STEP =================
-function nextStep() {
-  if(!request.managerApproval) return showSection('Manager');
-  if(!request.itApproval) return showSection('IT');
-  if(!request.financeApproval) return showSection('Finance');
-  if(!request.adminApproval) return showSection('Admin');
-  if(!request.finalHrApproval) return showSection('FinalHR');
-}
-
-// ================= APPROVE =================
+// ================= APPROVE STEP =================
 function approveStep(role) {
-  let comment = "";
-  switch(role) {
-    case 'Manager':
-      comment = document.getElementById('managerComment').value.trim();
-      if(!comment){ alert("Enter Manager Remarks"); return; }
-      request.managerApproval = "Approved";
-      request.managerRemarks = comment;
-      request.history.push({ by: request.managerId, role, action:"Approved", notes: comment, at: new Date() });
-      break;
+  if (!currentRequestId) return;
 
-    case 'IT':
-      comment = document.getElementById('itComment').value.trim();
-      request.itApproval = "Approved";
-      request.itRemarks = comment;
-      request.assetReturn = document.getElementById('assetReturn').value;
-      request.idBlocked = document.getElementById('IdBlocked').value;
-      request.history.push({ by: request.itIdAssign, role, action:"Approved", notes: comment, at: new Date() });
-      break;
+  // COMMENT VALIDATION
+  const commentBox = document.getElementById(role.toLowerCase() + "Comment");
+  if (commentBox && commentBox.value.trim() === "") {
+    alert("Please enter remark before approving.");
+    return;
+  }
+  const commentText = commentBox ? commentBox.value.trim() : "";
 
-    case 'Finance':
-      comment = document.getElementById('financeComment').value.trim();
-      if(document.getElementById('financeDue').value === "Pending Due") { alert("Pending dues exist."); return; }
-      request.financeApproval = "Approved";
-      request.financeRemarks = comment;
-      request.settlementDue = document.getElementById('SettlementDue').value;
-      request.history.push({ by: request.financeId, role, action:"Approved", notes: comment, at: new Date() });
-      break;
-
-    case 'Admin':
-      comment = document.getElementById('adminComment').value.trim();
-      request.adminApproval = "Approved";
-      request.adminRemarks = comment;
-      request.history.push({ by: request.adminIdAssign, role, action:"Approved", notes: comment, at: new Date() });
-      break;
-
-    case 'FinalHR':
-      comment = document.getElementById('finalhrComment').value.trim();
-      request.finalHrApproval = "Approved";
-      request.finalHrRemarks = comment;
-      request.finalSettlement = document.getElementById('financeSettlement')?.value || "-";
-      request.history.push({ by: "HR", role, action:"Completed", notes: comment, at: new Date() });
-      break;
+  // FINANCE DUE CHECK
+  if (role === "Finance") {
+    const financeDue = document.getElementById("financeDue");
+    if (financeDue && financeDue.value === "Pending Due") {
+      alert("Cannot approve. Pending dues exist.");
+      return;
+    }
   }
 
-  saveRequest();
-  nextStep();
-}
-
-// ================= REJECT =================
-function rejectStep(role) {
-  let comment = "";
-  switch(role) {
-    case 'Manager': comment = document.getElementById('managerComment').value.trim(); request.managerApproval="Rejected"; request.managerRemarks=comment; request.history.push({by:request.managerId, role, action:"Rejected", notes:comment, at:new Date()}); break;
-    case 'IT': comment = document.getElementById('itComment').value.trim(); request.itApproval="Rejected"; request.itRemarks=comment; request.history.push({by:request.itIdAssign, role, action:"Rejected", notes:comment, at:new Date()}); break;
-    case 'Finance': comment = document.getElementById('financeComment').value.trim(); request.financeApproval="Rejected"; request.financeRemarks=comment; request.history.push({by:request.financeId, role, action:"Rejected", notes:comment, at:new Date()}); break;
-    case 'Admin': comment = document.getElementById('adminComment').value.trim(); request.adminApproval="Rejected"; request.adminRemarks=comment; request.history.push({by:request.adminIdAssign, role, action:"Rejected", notes:comment, at:new Date()}); break;
-    case 'FinalHR': comment = document.getElementById('finalhrComment').value.trim(); request.finalHrApproval="Rejected"; request.finalHrRemarks=comment; request.history.push({by:"HR", role, action:"Rejected", notes:comment, at:new Date()}); break;
+  // ASSET RETURN CHECK
+  if (role === "IT") {
+    const assetReturn = document.getElementById("assetReturn");
+    const idBlocked = document.getElementById("IdBlocked");
+    if (assetReturn && assetReturn.value === "No") {
+      alert("Cannot approve. Assets not returned.");
+      return;
+    }
+    if (idBlocked && idBlocked.value === "No") {
+      alert("Cannot approve. ID not blocked.");
+      return;
+    }
+    request.assetReturn = assetReturn.value;
+    request.idBlocked = idBlocked.value;
   }
 
-  saveRequest();
-  alert(role + " Rejected!");
-  nextStep();
-}
+  // ADMIN Settlement check
+  if (role === "Admin") {
+    const adminSettlement = document.getElementById("settlementDue");
+    if (adminSettlement) {
+      request.settlementDue = adminSettlement.value;
+    }
+  }
 
-// ================= SAVE =================
-function saveRequest() {
-  const index = requests.findIndex(r=>r.id===request.id);
-  requests[index]=request;
-  localStorage.setItem("exitRequests", JSON.stringify(requests));
-}
+  // HR final settlement check
+  if (role === "FinalHR") {
+    const hrSettlement = document.getElementById("financeSettlement");
+    if (hrSettlement) {
+      request.finalSettlement = hrSettlement.value;
+    }
+  }
 
-// ================= INITIALIZE =================
-nextStep();
-
-// ================= PRINT =================
-function printRequest() {
-  const win = window.open("", "", "width=1000,height=800");
-  win.document.write("<html><head><title>Exit Clearance</title>");
-  win.document.write("<style>body{font-family:Arial;}table{border-collapse:collapse;width:100%;}th,td{border:1px solid #000;padding:8px;text-align:left;}th{background:#ddd;}</style></head><body>");
-  win.document.write("<h2>Employee Exit Clearance</h2>");
-  win.document.write("<table>");
-  win.document.write("<tr><th>ID</th><td>" + request.id + "</td></tr>");
-  win.document.write("<tr><th>Name</th><td>" + request.name + "</td></tr>");
-  win.document.write("<tr><th>Employee ID</th><td>" + request.empId + "</td></tr>");
-  win.document.write("<tr><th>Department</th><td>" + request.department + "</td></tr>");
-  win.document.write("<tr><th>Reason</th><td>" + request.reason + "</td></tr>");
-
-  ['Manager','IT','Finance','Admin','FinalHR'].forEach(sec=>{
-    win.document.write("<tr><th colspan='2'>" + sec + " Approval</th></tr>");
-    win.document.write("<tr><th>Status</th><td>" + (request[sec.toLowerCase() + "Approval"] || "-") + "</td></tr>");
-    win.document.write("<tr><th>Remarks</th><td>" + (request[sec.toLowerCase() + "Remarks"] || "-") + "</td></tr>");
+  // SAVE APPROVAL
+  if (!request.history) request.history = [];
+  request.history.push({
+    role: role,
+    action: "Approved",
+    comment: commentText,
+    date: new Date()
   });
 
-  win.document.write("<tr><th>Overall Status</th><td>" + (request.status||"-") + "</td></tr>");
-  win.document.write("</table></body></html>");
-  win.document.close();
-  win.print();
+  // UPDATE APPROVAL STATUS
+  switch (role) {
+    case "Manager":
+      request.managerApproval = "Approved";
+      request.managerComment = commentText;
+      break;
+    case "IT":
+      request.itApproval = "Approved";
+      request.itComment = commentText;
+      break;
+    case "Finance":
+      request.financeApproval = "Approved";
+      request.financeComment = commentText;
+      break;
+    case "Admin":
+      request.adminApproval = "Approved";
+      request.adminComment = commentText;
+      break;
+    case "FinalHR":
+      request.finalHrApproval = "Approved";
+      request.hrComment = commentText;
+      request.status = "Completed";
+      break;
+  }
+
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+  renderHistory();
+  alert(role + " approved successfully.");
+
+  // Show next section
+  showNextSection(role);
+}
+
+// ================= REJECT STEP =================
+function rejectStep(role) {
+  if (!currentRequestId) return;
+
+  const commentBox = document.getElementById(role.toLowerCase() + "Comment");
+  const commentText = commentBox ? commentBox.value.trim() : "";
+
+  if (!request.history) request.history = [];
+  request.history.push({
+    role: role,
+    action: "Rejected",
+    comment: commentText,
+    date: new Date()
+  });
+
+  // UPDATE STATUS
+  switch (role) {
+    case "Manager":
+      request.managerApproval = "Rejected";
+      break;
+    case "IT":
+      request.itApproval = "Rejected";
+      break;
+    case "Finance":
+      request.financeApproval = "Rejected";
+      break;
+    case "Admin":
+      request.adminApproval = "Rejected";
+      break;
+    case "FinalHR":
+      request.finalHrApproval = "Rejected";
+      request.status = "Rejected";
+      break;
+  }
+
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+  renderHistory();
+  alert(role + " rejected.");
+}
+
+// ================= SHOW NEXT SECTION =================
+function showNextSection(currentRole) {
+  const sections = ["managerSection", "itSection", "financeSection", "adminSection", "finalHrSection"];
+  const index = { "Manager": 0, "IT": 1, "Finance": 2, "Admin": 3, "FinalHR": 4 }[currentRole];
+  if (index !== undefined && index + 1 < sections.length) {
+    document.getElementById(sections[index + 1]).style.display = "block";
+  }
+}
+
+// ================= PRINT FUNCTION =================
+function printRequest() {
+  const printWindow = window.open("", "", "width=1000,height=800");
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>Exit Clearance Form</title>
+      <style>
+        body { font-family: Arial; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #000; }
+        th, td { padding: 8px; text-align: left; }
+        th { background: #ddd; }
+        .section-title { font-weight: bold; background: #eee; }
+        .footer { margin-top: 30px; text-align: center; font-style: italic; }
+      </style>
+    </head>
+    <body>
+      <h2 style="text-align:center;">Employee Exit Clearance Form</h2>
+      <table>
+        <tr><th>ID</th><td>${request.id}</td></tr>
+        <tr><th>Name</th><td>${request.name}</td></tr>
+        <tr><th>Employee ID</th><td>${request.empId}</td></tr>
+        <tr><th>Department</th><td>${request.department}</td></tr>
+        <tr><th>Reason</th><td>${request.reason}</td></tr>
+
+        <tr class="section-title"><td colspan="2">Manager Approval</td></tr>
+        <tr><th>Status</th><td>${request.managerApproval}</td></tr>
+        <tr><th>Remark</th><td>${request.managerComment || "-"}</td></tr>
+
+        <tr class="section-title"><td colspan="2">IT Approval</td></tr>
+        <tr><th>Status</th><td>${request.itApproval}</td></tr>
+        <tr><th>Remark</th><td>${request.itComment || "-"}</td></tr>
+        <tr><th>Asset Returned</th><td>${request.assetReturn || "-"}</td></tr>
+        <tr><th>ID Blocked</th><td>${request.idBlocked || "-"}</td></tr>
+
+        <tr class="section-title"><td colspan="2">Finance Approval</td></tr>
+        <tr><th>Status</th><td>${request.financeApproval}</td></tr>
+        <tr><th>Remark</th><td>${request.financeComment || "-"}</td></tr>
+        <tr><th>Settlement Due</th><td>${request.settlementDue || "-"}</td></tr>
+
+        <tr class="section-title"><td colspan="2">Admin Approval</td></tr>
+        <tr><th>Status</th><td>${request.adminApproval}</td></tr>
+        <tr><th>Remark</th><td>${request.adminComment || "-"}</td></tr>
+
+        <tr class="section-title"><td colspan="2">Final HR Approval</td></tr>
+        <tr><th>Status</th><td>${request.finalHrApproval}</td></tr>
+        <tr><th>Remark</th><td>${request.hrComment || "-"}</td></tr>
+        <tr><th>Final Settlement</th><td>${request.finalSettlement || "-"}</td></tr>
+
+        <tr class="section-title"><td colspan="2">Overall Status</td></tr>
+        <tr><th>Final Status</th><td>${request.status}</td></tr>
+      </table>
+
+      <div class="footer">
+        This document is confidential.<br><br>
+        Please provide digital signature for final confirmation.
+      </div>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.print();
 }
