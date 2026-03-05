@@ -1,120 +1,112 @@
-// =========================
-// approval.js
-// =========================
-
-// Current request ID (set when viewing request)
-let currentRequestId = null;
-
-// Workflow roles
-const roles = ["Manager", "IT", "Finance", "Admin", "Final HR"];
-
-// Load current request
-function loadRequest(id) {
-  currentRequestId = id;
-  const requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
-  return requests.find(r => r.id === id);
-}
-
-// Save updated request back to localStorage
-function saveRequest(request) {
-  const requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
-  const index = requests.findIndex(r => r.id === request.id);
-  if (index !== -1) {
-    requests[index] = request;
-  } else {
-    requests.push(request);
-  }
-  localStorage.setItem("exitRequests", JSON.stringify(requests));
-}
-
-// =========================
-// Approve Step
-// =========================
+// ================= APPROVE STEP =================
 function approveStep(role) {
   if (!currentRequestId) return;
 
-  const request = loadRequest(currentRequestId);
+  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  let request = requests.find(r => r.id === currentRequestId);
   if (!request) return;
 
-  // Get remarks input
-  const remarksInput = document.getElementById(role.toLowerCase().replace(/\s/g,'') + "Remarks");
-  const remarks = remarksInput ? remarksInput.value.trim() : "";
+  // Get remark from the corresponding textarea
+  let commentBox = document.getElementById(role.toLowerCase() + "Remarks");
+  let commentText = commentBox ? commentBox.value.trim() : "";
 
-  if (remarks === "") {
-    alert("Please enter remarks before approving.");
+  if (!commentText) {
+    alert("Please enter remark before approving.");
     return;
   }
 
-  // Finance due validation
+  // Finance validation for dues
   if (role === "Finance") {
-    const financeDueInput = document.getElementById("financeDue");
-    if (financeDueInput) {
-      if (financeDueInput.value === "Pending Due") {
-        alert("Cannot approve: pending dues exist.");
-        return;
-      }
-      request.financeDue = financeDueInput.value;
+    let financeDue = document.getElementById("financeDue");
+    if (financeDue && financeDue.value === "Pending Due") {
+      alert("Cannot proceed. Pending dues exist.");
+      return;
     }
   }
 
-  // Save approval status and remarks
-  const key = role.toLowerCase().replace(/\s/g,'');
-  request[key + "Approval"] = "Approved";
-  request[key + "Remarks"] = remarks;
+  // Save approval in request
+  switch(role) {
+    case "Manager":
+      request.managerApproval = "Approved";
+      request.managerRemarks = commentText;
+      break;
+    case "IT":
+      request.itApproval = "Approved";
+      request.itRemarks = commentText;
+      break;
+    case "Finance":
+      request.financeApproval = "Approved";
+      request.financeRemarks = commentText;
+      break;
+    case "Admin":
+      request.adminApproval = "Approved";
+      request.adminRemarks = commentText;
+      break;
+    case "Final HR":
+      request.finalHrApproval = "Approved";
+      request.finalHrRemarks = commentText;
+      break;
+  }
 
-  // Save history
-  if (!request.history) request.history = [];
+  // Save approval history
   request.history.push({
     role: role,
     action: "Approved",
-    comment: remarks,
-    date: new Date().toLocaleString()
+    comment: commentText,
+    date: new Date().toISOString()
   });
 
-  request.lastApprovedBy = role;
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+  alert(role + " approved successfully");
 
-  // Move to next step
-  const currentIndex = roles.indexOf(role);
-  if (currentIndex >= 0 && currentIndex < roles.length - 1) {
-    request.currentStep = currentIndex + 1;
-  } else {
-    request.currentStep = roles.length;
-    request.status = "Completed";
-  }
-
-  saveRequest(request);
-  alert(role + " Approved Successfully");
-  renderApprovalUI(request); // update UI if needed
+  nextStep && nextStep(); // optional, only if nextStep() exists
 }
 
-// =========================
-// Reject Step
-// =========================
+// ================= REJECT STEP =================
 function rejectStep(role) {
   if (!currentRequestId) return;
 
-  const request = loadRequest(currentRequestId);
+  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
+  let request = requests.find(r => r.id === currentRequestId);
   if (!request) return;
 
-  const remarksInput = document.getElementById(role.toLowerCase().replace(/\s/g,'') + "Remarks");
-  const remarks = remarksInput ? remarksInput.value.trim() : "";
+  let commentBox = document.getElementById(role.toLowerCase() + "Remarks");
+  let commentText = commentBox ? commentBox.value.trim() : "";
 
-  const key = role.toLowerCase().replace(/\s/g,'');
-  request[key + "Approval"] = "Rejected";
-  request[key + "Remarks"] = remarks;
+  // Save rejection in request
+  switch(role) {
+    case "Manager":
+      request.managerApproval = "Rejected";
+      request.managerRemarks = commentText;
+      break;
+    case "IT":
+      request.itApproval = "Rejected";
+      request.itRemarks = commentText;
+      break;
+    case "Finance":
+      request.financeApproval = "Rejected";
+      request.financeRemarks = commentText;
+      break;
+    case "Admin":
+      request.adminApproval = "Rejected";
+      request.adminRemarks = commentText;
+      break;
+    case "Final HR":
+      request.finalHrApproval = "Rejected";
+      request.finalHrRemarks = commentText;
+      break;
+  }
 
-  if (!request.history) request.history = [];
+  // Save rejection history
   request.history.push({
     role: role,
     action: "Rejected",
-    comment: remarks,
-    date: new Date().toLocaleString()
+    comment: commentText,
+    date: new Date().toISOString()
   });
 
-  request.status = "Rejected";
-  request.lastApprovedBy = role;
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
+  alert(role + " rejected successfully");
 
-  saveRequest(request);
-  alert(role + " Rejected Successfully");
-  renderApprovalUI(request);
+  rejectProcess && rejectProcess(role); // optional
 }
