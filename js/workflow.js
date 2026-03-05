@@ -42,6 +42,7 @@ function createRequest() {
     managerApproval: "Pending",
     itApproval: "Pending",
     financeApproval: "Pending",
+    AdminApproval: "Pending",
     hrApproval: "Pending",
     assetReturn: "-",
     status: "In Progress",
@@ -118,7 +119,10 @@ function approveStep() {
       request.lastApprovedBy = request.itIdAssign;
       break;
     case "Admin":
-    case "FinalHR":
+      request.Adminapproval = "Approved";
+      request.lastApprovedBy = request.itAdminAssign;
+      break;
+   case "FinalHR":
       request.hrApproval = "Approved";
       request.lastApprovedBy = request.adminIdAssign;
       break;
@@ -185,4 +189,5 @@ function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
 }
+
 
