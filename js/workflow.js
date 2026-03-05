@@ -1,10 +1,8 @@
 // ================= AUTH CHECK =================
 const user = localStorage.getItem("loggedInUser");
-if (!user) {
-  window.location.href = "login.html";
-}
+if (!user) window.location.href = "login.html";
 
-// ================= GET REQUEST =================
+// ================= GET CURRENT REQUEST =================
 const params = new URLSearchParams(window.location.search);
 const currentRequestId = params.get("id");
 
@@ -16,33 +14,24 @@ if (!request) {
   window.location.href = "dashboard.html";
 }
 
-// ================= SHOW CURRENT APPROVAL =================
+// ================= SHOW CURRENT APPROVAL SECTION =================
 function showSection(role) {
   const sections = ['manager', 'it', 'finance', 'admin', 'finalHr'];
   sections.forEach(sec => {
-    document.getElementById(sec + 'Section').style.display = 'none';
+    const el = document.getElementById(sec + 'Section');
+    if(el) el.style.display = 'none';
   });
 
   switch(role) {
-    case 'Manager':
-      document.getElementById('managerSection').style.display = 'block';
-      break;
-    case 'IT':
-      document.getElementById('itSection').style.display = 'block';
-      break;
-    case 'Finance':
-      document.getElementById('financeSection').style.display = 'block';
-      break;
-    case 'Admin':
-      document.getElementById('adminSection').style.display = 'block';
-      break;
-    case 'FinalHR':
-      document.getElementById('finalHrSection').style.display = 'block';
-      break;
+    case 'Manager': document.getElementById('managerSection').style.display = 'block'; break;
+    case 'IT': document.getElementById('itSection').style.display = 'block'; break;
+    case 'Finance': document.getElementById('financeSection').style.display = 'block'; break;
+    case 'Admin': document.getElementById('adminSection').style.display = 'block'; break;
+    case 'FinalHR': document.getElementById('finalHrSection').style.display = 'block'; break;
   }
 }
 
-// Determine next step
+// ================= DETERMINE NEXT STEP =================
 function nextStep() {
   if(!request.managerApproval) return showSection('Manager');
   if(!request.itApproval) return showSection('IT');
@@ -57,10 +46,10 @@ function approveStep(role) {
   switch(role) {
     case 'Manager':
       comment = document.getElementById('managerComment').value.trim();
-      if(comment === "") { alert("Enter Manager Remarks"); return;}
+      if(!comment){ alert("Enter Manager Remarks"); return; }
       request.managerApproval = "Approved";
       request.managerRemarks = comment;
-      request.history.push({ by: request.managerId, role: role, action:"Approved", notes: comment, at: new Date() });
+      request.history.push({ by: request.managerId, role, action:"Approved", notes: comment, at: new Date() });
       break;
 
     case 'IT':
@@ -69,25 +58,23 @@ function approveStep(role) {
       request.itRemarks = comment;
       request.assetReturn = document.getElementById('assetReturn').value;
       request.idBlocked = document.getElementById('IdBlocked').value;
-      request.history.push({ by: request.itIdAssign, role: role, action:"Approved", notes: comment, at: new Date() });
+      request.history.push({ by: request.itIdAssign, role, action:"Approved", notes: comment, at: new Date() });
       break;
 
     case 'Finance':
       comment = document.getElementById('financeComment').value.trim();
-      if(document.getElementById('financeDue').value === "Pending Due") {
-        alert("Cannot approve. Pending dues exist."); return;
-      }
+      if(document.getElementById('financeDue').value === "Pending Due") { alert("Pending dues exist."); return; }
       request.financeApproval = "Approved";
       request.financeRemarks = comment;
       request.settlementDue = document.getElementById('SettlementDue').value;
-      request.history.push({ by: request.financeId, role: role, action:"Approved", notes: comment, at: new Date() });
+      request.history.push({ by: request.financeId, role, action:"Approved", notes: comment, at: new Date() });
       break;
 
     case 'Admin':
       comment = document.getElementById('adminComment').value.trim();
       request.adminApproval = "Approved";
       request.adminRemarks = comment;
-      request.history.push({ by: request.adminIdAssign, role: role, action:"Approved", notes: comment, at: new Date() });
+      request.history.push({ by: request.adminIdAssign, role, action:"Approved", notes: comment, at: new Date() });
       break;
 
     case 'FinalHR':
@@ -95,7 +82,7 @@ function approveStep(role) {
       request.finalHrApproval = "Approved";
       request.finalHrRemarks = comment;
       request.finalSettlement = document.getElementById('financeSettlement')?.value || "-";
-      request.history.push({ by: "HR", role: role, action:"Completed", notes: comment, at: new Date() });
+      request.history.push({ by: "HR", role, action:"Completed", notes: comment, at: new Date() });
       break;
   }
 
@@ -107,36 +94,11 @@ function approveStep(role) {
 function rejectStep(role) {
   let comment = "";
   switch(role) {
-    case 'Manager':
-      comment = document.getElementById('managerComment').value.trim();
-      request.managerApproval = "Rejected";
-      request.managerRemarks = comment;
-      request.history.push({ by: request.managerId, role: role, action:"Rejected", notes: comment, at: new Date() });
-      break;
-    case 'IT':
-      comment = document.getElementById('itComment').value.trim();
-      request.itApproval = "Rejected";
-      request.itRemarks = comment;
-      request.history.push({ by: request.itIdAssign, role: role, action:"Rejected", notes: comment, at: new Date() });
-      break;
-    case 'Finance':
-      comment = document.getElementById('financeComment').value.trim();
-      request.financeApproval = "Rejected";
-      request.financeRemarks = comment;
-      request.history.push({ by: request.financeId, role: role, action:"Rejected", notes: comment, at: new Date() });
-      break;
-    case 'Admin':
-      comment = document.getElementById('adminComment').value.trim();
-      request.adminApproval = "Rejected";
-      request.adminRemarks = comment;
-      request.history.push({ by: request.adminIdAssign, role: role, action:"Rejected", notes: comment, at: new Date() });
-      break;
-    case 'FinalHR':
-      comment = document.getElementById('finalhrComment').value.trim();
-      request.finalHrApproval = "Rejected";
-      request.finalHrRemarks = comment;
-      request.history.push({ by: "HR", role: role, action:"Rejected", notes: comment, at: new Date() });
-      break;
+    case 'Manager': comment = document.getElementById('managerComment').value.trim(); request.managerApproval="Rejected"; request.managerRemarks=comment; request.history.push({by:request.managerId, role, action:"Rejected", notes:comment, at:new Date()}); break;
+    case 'IT': comment = document.getElementById('itComment').value.trim(); request.itApproval="Rejected"; request.itRemarks=comment; request.history.push({by:request.itIdAssign, role, action:"Rejected", notes:comment, at:new Date()}); break;
+    case 'Finance': comment = document.getElementById('financeComment').value.trim(); request.financeApproval="Rejected"; request.financeRemarks=comment; request.history.push({by:request.financeId, role, action:"Rejected", notes:comment, at:new Date()}); break;
+    case 'Admin': comment = document.getElementById('adminComment').value.trim(); request.adminApproval="Rejected"; request.adminRemarks=comment; request.history.push({by:request.adminIdAssign, role, action:"Rejected", notes:comment, at:new Date()}); break;
+    case 'FinalHR': comment = document.getElementById('finalhrComment').value.trim(); request.finalHrApproval="Rejected"; request.finalHrRemarks=comment; request.history.push({by:"HR", role, action:"Rejected", notes:comment, at:new Date()}); break;
   }
 
   saveRequest();
@@ -146,8 +108,8 @@ function rejectStep(role) {
 
 // ================= SAVE =================
 function saveRequest() {
-  const index = requests.findIndex(r => r.id === request.id);
-  requests[index] = request;
+  const index = requests.findIndex(r=>r.id===request.id);
+  requests[index]=request;
   localStorage.setItem("exitRequests", JSON.stringify(requests));
 }
 
@@ -167,14 +129,13 @@ function printRequest() {
   win.document.write("<tr><th>Department</th><td>" + request.department + "</td></tr>");
   win.document.write("<tr><th>Reason</th><td>" + request.reason + "</td></tr>");
 
-  const sections = ['Manager','IT','Finance','Admin','FinalHR'];
-  sections.forEach(sec => {
+  ['Manager','IT','Finance','Admin','FinalHR'].forEach(sec=>{
     win.document.write("<tr><th colspan='2'>" + sec + " Approval</th></tr>");
     win.document.write("<tr><th>Status</th><td>" + (request[sec.toLowerCase() + "Approval"] || "-") + "</td></tr>");
     win.document.write("<tr><th>Remarks</th><td>" + (request[sec.toLowerCase() + "Remarks"] || "-") + "</td></tr>");
   });
 
-  win.document.write("<tr><th>Overall Status</th><td>" + request.status + "</td></tr>");
+  win.document.write("<tr><th>Overall Status</th><td>" + (request.status||"-") + "</td></tr>");
   win.document.write("</table></body></html>");
   win.document.close();
   win.print();
