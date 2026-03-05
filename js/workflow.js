@@ -49,7 +49,6 @@ function renderDashboard() {
         tbody.innerHTML = "<tr><td colspan='10'>No records found</td></tr>";
         return;
     }
-
     requests.forEach(r => {
         tbody.innerHTML += `
             <tr>
@@ -72,3 +71,4 @@ function renderDashboard() {
 
 // ================== INITIAL LOAD ==================
 document.addEventListener("DOMContentLoaded", renderDashboard);
+
