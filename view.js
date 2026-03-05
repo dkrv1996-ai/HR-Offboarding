@@ -1,65 +1,5 @@
-// ================= AUTH CHECK =================
-const user = localStorage.getItem("loggedInUser");
-if (!user) {
-  window.location.href = "login.html";
-}
-
-function loadRequests() {
-  return JSON.parse(localStorage.getItem("exitRequests") || "[]");
-}
-
-function logout() {
-  localStorage.removeItem("loggedInUser");
-  window.location.href = "login.html";
-}
-
-// ================= GET REQUEST =================
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
-
-const request = loadRequests().find(r => r.id === id);
-
-if (!request) {
-  alert("Request not found");
-  window.location.href = "dashboard.html";
-}
-
-// ================= FILL DATA =================
-document.getElementById("id").innerText = request.id;
-document.getElementById("name").innerText = request.name;
-document.getElementById("empId").innerText = request.empId;
-document.getElementById("dept").innerText = request.department;
-document.getElementById("reason").innerText = request.reason;
-
-// APPROVAL STATUS
-document.getElementById("manager").innerText = request.managerApproval || "Pending";
-document.getElementById("it").innerText = request.itApproval || "Pending";
-document.getElementById("finance").innerText = request.financeApproval || "Pending";
-document.getElementById("hr").innerText = request.finalHrApproval || "Pending";
-
-document.getElementById("asset").innerText = request.assetReturn || "-";
-document.getElementById("status").innerText = request.status;
-
-// ================= HISTORY =================
-let historyHTML = "";
-if (request.history && request.history.length > 0) {
-  request.history.forEach(h => {
-    historyHTML += `
-      <p>
-        <strong>${h.by}</strong> - ${h.action}<br>
-        Remarks: ${h.notes || "-"}<br>
-        Date: ${new Date(h.at).toLocaleString()}
-      </p>
-      <hr>
-    `;
-  });
-}
-document.getElementById("history").innerHTML = historyHTML;
-
-
 // ================= PRINT FUNCTION =================
 function printRequest() {
-
   const printWindow = window.open("", "", "width=1000,height=800");
 
   printWindow.document.write(`
@@ -110,48 +50,50 @@ function printRequest() {
     <h2 style="text-align:center;">Employee Exit Clearance Form</h2>
 
     <table>
+      <tr><th>ID</th><td>${request.id || "-"}</td></tr>
+      <tr><th>Name</th><td>${request.name || "-"}</td></tr>
+      <tr><th>Employee ID</th><td>${request.empId || "-"}</td></tr>
+      <tr><th>Department</th><td>${request.department || "-"}</td></tr>
+      <tr><th>Reason</th><td>${request.reason || "-"}</td></tr>
 
-      <tr><th>ID</th><td>${request.id}</td></tr>
-      <tr><th>Name</th><td>${request.name}</td></tr>
-      <tr><th>Employee ID</th><td>${request.empId}</td></tr>
-      <tr><th>Department</th><td>${request.department}</td></tr>
-      <tr><th>Reason</th><td>${request.reason}</td></tr>
-
+      <!-- Manager -->
       <tr class="section-title"><td colspan="2">Manager Approval</td></tr>
-      <tr><th>Status</th><td>${request.managerApproval}</td></tr>
+      <tr><th>Status</th><td>${request.managerApproval || "Pending"}</td></tr>
       <tr><th>Approved By</th><td>${request.managerId || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.managerComment || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.managerRemarks || "-"}</td></tr>
 
+      <!-- IT -->
       <tr class="section-title"><td colspan="2">IT Approval</td></tr>
-      <tr><th>Status</th><td>${request.itApproval}</td></tr>
+      <tr><th>Status</th><td>${request.itApproval || "Pending"}</td></tr>
       <tr><th>Approved By</th><td>${request.itIdAssign || "-"}</td></tr>
       <tr><th>Asset Returned</th><td>${request.assetReturn || "-"}</td></tr>
       <tr><th>ID Blocked</th><td>${request.idBlocked || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.itcomment|| "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.itRemarks || "-"}</td></tr>
 
+      <!-- Finance -->
       <tr class="section-title"><td colspan="2">Finance Approval</td></tr>
-      <tr><th>Status</th><td>${request.financeApproval}</td></tr>
+      <tr><th>Status</th><td>${request.financeApproval || "Pending"}</td></tr>
       <tr><th>Approved By</th><td>${request.financeId || "-"}</td></tr>
-      <tr><th>Settlement Due</th><td>${request.IdBlocked || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.adminComment || "-"}</td></tr>
+      <tr><th>Settlement Due</th><td>${request.financeDue || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.financeRemarks || "-"}</td></tr>
 
+      <!-- Admin -->
       <tr class="section-title"><td colspan="2">Admin Approval</td></tr>
-      <tr><th>Status</th><td>${request.AdminApproval}</td></tr>
-      <tr><th>Approved By</th><td>${request.AdminId || "-"}</td></tr>
+      <tr><th>Status</th><td>${request.adminApproval || "Pending"}</td></tr>
+      <tr><th>Approved By</th><td>${request.adminId || "-"}</td></tr>
       <tr><th>Settlement Due</th><td>${request.settlementDue || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.financeComment || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.adminRemarks || "-"}</td></tr>
 
-
-
+      <!-- Final HR -->
       <tr class="section-title"><td colspan="2">HR Approval</td></tr>
-      <tr><th>Status</th><td>${request.finalHrApproval}</td></tr>
+      <tr><th>Status</th><td>${request.finalHrApproval || "Pending"}</td></tr>
       <tr><th>Approved By</th><td>${request.hrIdAssign || "-"}</td></tr>
       <tr><th>Final Settlement</th><td>${request.finalSettlement || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.hrComment || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.finalHrRemarks || "-"}</td></tr>
 
+      <!-- Overall -->
       <tr class="section-title"><td colspan="2">Overall</td></tr>
-      <tr><th>Final Status</th><td><strong>${request.status}</strong></td></tr>
-
+      <tr><th>Final Status</th><td><strong>${request.status || "-"}</strong></td></tr>
     </table>
 
     <div class="footer">
