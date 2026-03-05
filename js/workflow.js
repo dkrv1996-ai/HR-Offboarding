@@ -6,14 +6,19 @@ if (!user) {
 
 // ================= GET REQUEST =================
 const params = new URLSearchParams(window.location.search);
-const currentRequestId = params.get("id");
-const requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
-const request = requests.find(r => r.id === currentRequestId);
+const id = params.get("id");
 
-if (!request) {
-  alert("Request not found");
-  window.location.href = "dashboard.html";
-}
+let request = null;
+
+if (id) { 
+  // Only try to load request if ?id=xxxx is present
+  const requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
+  request = requests.find(r => r.id === id);
+
+  if(!request) {
+    alert("Request not found");
+    window.location.href = "dashboard.html";
+  }
 
 // ================= FILL DATA =================
 document.getElementById("id").innerText = request.id;
@@ -260,3 +265,4 @@ function printRequest() {
   printWindow.document.close();
   printWindow.print();
 }
+
