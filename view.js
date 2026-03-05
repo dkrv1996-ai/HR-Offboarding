@@ -15,6 +15,7 @@ function printRequest() {
           font-size: 70px;
           color: rgba(200,200,200,0.15);
           transform: rotate(-30deg);
+          z-index: -1;
         }
         table {
           width: 100%;
@@ -40,6 +41,7 @@ function printRequest() {
           text-align: center;
           font-style: italic;
         }
+        hr { border: 0; border-top: 1px solid #ccc; margin:5px 0; }
       </style>
     </head>
 
@@ -95,6 +97,22 @@ function printRequest() {
       <tr class="section-title"><td colspan="2">Overall</td></tr>
       <tr><th>Final Status</th><td><strong>${request.status || "-"}</strong></td></tr>
     </table>
+
+    <!-- Approval History -->
+    <h3 style="margin-top:30px;">Approval History</h3>
+    ${request.history && request.history.length > 0
+      ? request.history
+          .sort((a,b) => new Date(a.date || a.at) - new Date(b.date || b.at))
+          .map(h => `
+            <p>
+              <strong>${h.role}</strong> - ${h.action}<br>
+              Remarks: ${h.comment || "-"}<br>
+              Date: ${new Date(h.date || h.at).toLocaleString()}
+            </p>
+            <hr>
+          `).join("")
+      : "<p>No approval history found.</p>"
+    }
 
     <div class="footer">
       This document is confidential.<br><br>
