@@ -20,55 +20,31 @@
 <!-- Approval Section -->
 <div id="approvalSection" data-request-id="REQ123">
 
-  <!-- Manager -->
-  <div class="department" data-role="Manager">
-    <label>Manager Comment:</label>
-    <input type="text" id="managerComment" placeholder="Enter comment">
-    <button class="approveBtn">Approve</button>
-    <button class="rejectBtn">Reject</button>
-  </div>
+ <!-- Manager -->
+<textarea id="managerRemarks" placeholder="Enter Manager remarks"></textarea>
+<button onclick="approveStep('Manager')">Approve</button>
+<button onclick="rejectStep('Manager')">Reject</button>
 
-  <!-- IT -->
-  <div class="department" data-role="IT">
-    <label>IT Comment:</label>
-    <input type="text" id="itComment" placeholder="Enter comment">
-    <button class="approveBtn">Approve</button>
-    <button class="rejectBtn">Reject</button>
-  </div>
+<!-- IT -->
+<textarea id="itRemarks" placeholder="Enter IT remarks"></textarea>
+<button onclick="approveStep('IT')">Approve</button>
+<button onclick="rejectStep('IT')">Reject</button>
 
-  <!-- Finance -->
-  <div class="department" data-role="Finance">
-    <label>Finance Comment:</label>
-    <input type="text" id="financeComment" placeholder="Enter comment">
-    <input type="hidden" id="financeDue" value="No Pending">
-    <button class="approveBtn">Approve</button>
-    <button class="rejectBtn">Reject</button>
-  </div>
-  <!-- Admin -->
-  <div class="department" data-role="Admin">
-    <label>Admin Comment:</label>
-    <input type="text" id="adminComment" placeholder="Enter comment">
-    <button class="approveBtn">Approve</button>
-    <button class="rejectBtn">Reject</button>
-  </div>
+<!-- Finance -->
+<textarea id="financeRemarks" placeholder="Enter Finance remarks"></textarea>
+<input type="hidden" id="financeDue" value="No Due">
+<button onclick="approveStep('Finance')">Approve</button>
+<button onclick="rejectStep('Finance')">Reject</button>
 
-  <!-- HR -->
-  <div class="department" data-role="HR">
-    <label>HR Comment:</label>
-    <input type="text" id="hrComment" placeholder="Enter comment">
-    <button class="approveBtn">Approve</button>
-    <button class="rejectBtn">Reject</button>
-  </div>
+<!-- Admin -->
+<textarea id="adminRemarks" placeholder="Enter Admin remarks"></textarea>
+<button onclick="approveStep('Admin')">Approve</button>
+<button onclick="rejectStep('Admin')">Reject</button>
 
-  <!-- Final HR -->
-  <div class="department" data-role="Final HR">
-    <label>Final HR Comment:</label>
-    <input type="text" id="finalHrComment" placeholder="Enter comment">
-    <button class="approveBtn">Approve</button>
-    <button class="rejectBtn">Reject</button>
-  </div>
-
-</div>
+<!-- Final HR -->
+<textarea id="finalhrRemarks" placeholder="Enter Final HR remarks"></textarea>
+<button onclick="approveStep('Final HR')">Approve</button>
+<button onclick="rejectStep('Final HR')">Reject</button>
 
 <!-- Include Approval JS -->
 <script src="js/approval.js"></script>
