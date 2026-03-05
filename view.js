@@ -120,26 +120,34 @@ function printRequest() {
       <tr class="section-title"><td colspan="2">Manager Approval</td></tr>
       <tr><th>Status</th><td>${request.managerApproval}</td></tr>
       <tr><th>Approved By</th><td>${request.managerId || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.managerRemark || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.managerComment || "-"}</td></tr>
 
       <tr class="section-title"><td colspan="2">IT Approval</td></tr>
       <tr><th>Status</th><td>${request.itApproval}</td></tr>
       <tr><th>Approved By</th><td>${request.itIdAssign || "-"}</td></tr>
       <tr><th>Asset Returned</th><td>${request.assetReturn || "-"}</td></tr>
       <tr><th>ID Blocked</th><td>${request.idBlocked || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.itRemark || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.itcomment|| "-"}</td></tr>
 
       <tr class="section-title"><td colspan="2">Finance Approval</td></tr>
       <tr><th>Status</th><td>${request.financeApproval}</td></tr>
       <tr><th>Approved By</th><td>${request.financeId || "-"}</td></tr>
+      <tr><th>Settlement Due</th><td>${request.IdBlocked || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.adminComment || "-"}</td></tr>
+
+      <tr class="section-title"><td colspan="2">Admin Approval</td></tr>
+      <tr><th>Status</th><td>${request.AdminApproval}</td></tr>
+      <tr><th>Approved By</th><td>${request.AdminId || "-"}</td></tr>
       <tr><th>Settlement Due</th><td>${request.settlementDue || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.financeRemark || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.financeComment || "-"}</td></tr>
+
+
 
       <tr class="section-title"><td colspan="2">HR Approval</td></tr>
       <tr><th>Status</th><td>${request.finalHrApproval}</td></tr>
       <tr><th>Approved By</th><td>${request.hrIdAssign || "-"}</td></tr>
       <tr><th>Final Settlement</th><td>${request.finalSettlement || "-"}</td></tr>
-      <tr><th>Remark</th><td>${request.hrRemark || "-"}</td></tr>
+      <tr><th>Remark</th><td>${request.hrComment || "-"}</td></tr>
 
       <tr class="section-title"><td colspan="2">Overall</td></tr>
       <tr><th>Final Status</th><td><strong>${request.status}</strong></td></tr>
