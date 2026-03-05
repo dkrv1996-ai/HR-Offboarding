@@ -1,147 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Employee Exit Management System</title>
-
+  <title>Employee Exit Request</title>
   <style>
-    body { font-family: Arial; margin: 0; background: #f4f6f9; }
-    .nav { background: #1f2937; padding: 15px; color: white; font-size: 18px; font-weight: bold; }
-    .container { padding: 20px; max-width: 900px; margin: auto; }
-    .card { background: white; padding: 20px; margin-top: 20px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
-    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; }
-    button { padding: 8px 15px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }
-    .approve { background: #28a745; color: white; }
-    .reject { background: #dc3545; color: white; }
-    .approvalSection { display: none; }
+    body { font-family: Arial; background: #f4f6f9; padding: 0; margin: 0; }
+    .nav { background: #1f2937; color: white; padding: 15px; font-size: 18px; font-weight: bold; }
+    .container { max-width: 900px; margin: auto; padding: 20px; }
+    input, select, textarea { width: 100%; padding: 8px; margin: 5px 0 10px; }
+    button { padding: 8px 15px; margin-right: 5px; border-radius: 4px; border: none; cursor: pointer; background: #28a745; color: white; }
+    h3 { margin-top: 0; }
   </style>
 </head>
-
 <body>
-
 <div class="nav">Employee Exit Management System</div>
-
 <div class="container">
+  <h3>Create Exit Request</h3>
+  <label>Employee Name</label>
+  <input type="text" id="empName" placeholder="Enter employee name">
 
-  <!-- CREATE REQUEST -->
-  <div class="card">
-    <h3>Create Exit Request</h3>
+  <label>Employee ID</label>
+  <input type="text" id="empId" placeholder="Enter employee ID">
 
-    <label>Employee Name</label>
-    <input type="text" id="empName">
+  <label>Department</label>
+  <input type="text" id="empDept" placeholder="Enter department">
 
-    <label>Employee ID</label>
-    <input type="text" id="empId">
+  <label>Manager ID</label>
+  <input type="text" id="managerId" placeholder="Manager ID">
 
-    <label>Department</label>
-    <input type="text" id="empDept">
+  <label>IT Officer ID</label>
+  <input type="text" id="itIdAssign" placeholder="IT Officer ID">
 
-    <label>Manager ID</label>
-    <input type="text" id="managerId">
+  <label>Finance Officer ID</label>
+  <input type="text" id="financeId" placeholder="Finance Officer ID">
 
-    <label>Finance Officer ID</label>
-    <input type="text" id="financeId">
+  <label>Admin Officer ID</label>
+  <input type="text" id="adminIdAssign" placeholder="Admin Officer ID">
 
-    <label>IT Officer ID</label>
-    <input type="text" id="itIdAssign">
+  <label>Reason for Exit</label>
+  <select id="empReason">
+    <option value="">-- Select Reason --</option>
+    <option>Resignation</option>
+    <option>Termination</option>
+    <option>Retirement</option>
+  </select>
 
-    <label>Admin Officer ID</label>
-    <input type="text" id="adminIdAssign">
-
-    <label>Reason for Exit</label>
-    <select id="empReason">
-      <option value="">-- Select Reason --</option>
-      <option>Resignation</option>
-      <option>Termination</option>
-      <option>Retirement</option>
-    </select>
-    <button type="button" onclick="createRequest()" class="approve">Submit Request</button>
-  </div>
-
-  <!-- MANAGER -->
-  <div id="managerSection" class="card approvalSection">
-    <h3>Manager Approval</h3>
-    <textarea id="managerRemarks" placeholder="Manager Comment"></textarea>
-    <button onclick="approveStep('Manager')" class="approve">Approve</button>
-    <button onclick="rejectStep('Manager')" class="reject">Reject</button>
-  </div>
-
-  <!-- FINANCE -->
-  <div id="financeSection" class="card approvalSection">
-    <h3>Finance Clearance</h3>
-    <label>Pending Dues</label>
-    <select id="financeDue">
-      <option value="No Due">No Due</option>
-      <option value="Pending Due">Pending Due</option>
-    </select>
-    <label>Settlement Done</label>
-    <select id="settlementDue">
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-    <textarea id="financeRemarks" placeholder="Finance Comment"></textarea>
-    <button onclick="approveStep('Finance')" class="approve">Approve</button>
-    <button onclick="rejectStep('Finance')" class="reject">Reject</button>
-  </div>
-
-  <!-- IT -->
-  <div id="itSection" class="card approvalSection">
-    <h3>IT Clearance</h3>
-    <label>Assets Returned</label>
-    <select id="assetReturn">
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-    <label>ID Blocked</label>
-    <select id="idBlocked">
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-    <textarea id="itRemarks" placeholder="IT Comment"></textarea>
-    <button onclick="approveStep('IT')" class="approve">Approve</button>
-    <button onclick="rejectStep('IT')" class="reject">Reject</button>
-  </div>
-
-  <!-- ADMIN -->
-  <div id="adminSection" class="card approvalSection">
-    <h3>Admin Clearance</h3>
-    <label>ID Returned</label>
-    <select id="idReturn">
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-    <label>ID Blocked</label>
-    <select id="adminIdBlocked">
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-    <textarea id="adminRemarks" placeholder="Admin Comment"></textarea>
-    <button onclick="approveStep('Admin')" class="approve">Approve</button>
-    <button onclick="rejectStep('Admin')" class="reject">Reject</button>
-  </div>
-
-  <!-- FINAL HR -->
-  <div id="finalHrSection" class="card approvalSection">
-    <h3>Final HR Closure</h3>
-    <label>Exit Interview Done</label>
-    <select id="exitInterview">
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-    <label>Final Settlement Done</label>
-    <select id="finalSettlementDone">
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-    <textarea id="finalHrRemarks" placeholder="Final HR Comment"></textarea>
-    <button onclick="approveStep('Final HR')" class="approve">Complete Process</button>
-    <button onclick="rejectStep('Final HR')" class="reject">Reject</button>
-  </div>
-
-  <br>
-  <a href="dashboard.html">Go To Dashboard</a>
+  <button onclick="createRequest()">Submit Request</button>
+  <br><br>
+  <a href="dashboard.html">Go to Dashboard</a>
 </div>
 
-<script src="js/workflow.js"></script>
-<script src="js/approval.js"></script>
+<script>
+function createRequest() {
+  const name = document.getElementById('empName').value.trim();
+  const empId = document.getElementById('empId').value.trim();
+  const dept = document.getElementById('empDept').value.trim();
+  const managerId = document.getElementById('managerId').value.trim();
+  const itId = document.getElementById('itIdAssign').value.trim();
+  const financeId = document.getElementById('financeId').value.trim();
+  const adminId = document.getElementById('adminIdAssign').value.trim();
+  const reason = document.getElementById('empReason').value;
+
+  if (!name || !empId || !dept || !managerId || !itId || !financeId || !adminId || !reason) {
+    alert('Please fill all fields.');
+    return;
+  }
+
+  const request = {
+    id: 'REQ' + Date.now(),
+    name,
+    empId,
+    department: dept,
+    reason,
+    managerId,
+    itIdAssign: itId,
+    financeId,
+    adminId,
+    status: 'New',
+    managerApproval: 'Pending',
+    itApproval: 'Pending',
+    financeApproval: 'Pending',
+    adminApproval: 'Pending',
+    finalHrApproval: 'Pending',
+    managerRemarks: '',
+    itRemarks: '',
+    financeRemarks: '',
+    adminRemarks: '',
+    finalHrRemarks: '',
+    history: []
+  };
+
+  const requests = JSON.parse(localStorage.getItem('exitRequests') || '[]');
+  requests.push(request);
+  localStorage.setItem('exitRequests', JSON.stringify(requests));
+
+  alert('Request submitted successfully!');
+  window.location.href = 'dashboard.html';
+}
+</script>
 </body>
 </html>
