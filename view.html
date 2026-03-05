@@ -1,56 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>View Exit Request</title>
-  <link rel="stylesheet" href="css/style.css">
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; }
-    .container { max-width: 900px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; margin-bottom: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    table, th, td { border: 1px solid #333; }
-    th, td { padding: 10px; text-align: left; font-size: 14px; }
-    th { background: #f0f0f0; }
-    .btn { padding: 8px 15px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-    .btn-print { background-color: #4CAF50; color: white; }
-    .btn-back { background-color: #777; color: white; text-decoration: none; display: inline-block; margin-bottom: 20px; }
-    h3 { margin-top: 30px; }
+    body { font-family: Arial; background: #f4f6f9; margin: 0; padding: 0; }
+    .nav { background: #1f2937; color: white; padding: 15px; font-size: 18px; font-weight: bold; }
+    .container { padding: 20px; max-width: 900px; margin: auto; }
+    .card { background: white; padding: 20px; margin-top: 20px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; }
+    button { padding: 8px 15px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }
+    .approve { background: #28a745; color: white; }
+    .reject { background: #dc3545; color: white; }
+    .approvalSection { display: none; }
+    h3 { margin-top: 0; }
   </style>
 </head>
 <body>
+
+<div class="nav">View Exit Request</div>
+
 <div class="container">
-  <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
 
-  <h2>Employee Exit Clearance Form</h2>
-  <table>
-    <tr><th>ID</th><td id="id"></td></tr>
-    <tr><th>Name</th><td id="name"></td></tr>
-    <tr><th>Employee ID</th><td id="empId"></td></tr>
-    <tr><th>Department</th><td id="dept"></td></tr>
-    <tr><th>Reason</th><td id="reason"></td></tr>
-    <tr><th>Manager Approval</th><td id="manager"></td></tr>
-    <tr><th>IT Clearance</th><td id="it"></td></tr>
-    <tr><th>Asset Returned</th><td id="aassetReturn"></td></tr>
-    <tr><th>Finance Clearance</th><td id="finance"></td></tr>
-    <tr><th>HR Approval</th><td id="hr"></td></tr>
-    <tr><th>Final Status</th><td id="status"></td></tr>
-    <tr><th>Last Approved By</th><td id="lastApproved"></td></tr>
-  </table>
-  <h3>Approval History</h3>
-  <table id="historyTable">
-    <tr>
-      <th>Approved By</th>
-      <th>Action</th>
-      <th>Remarks</th>
-      <th>Date</th>
-    </tr>
-    <!-- History rows will be inserted here -->
-  </table>
+  <div class="card">
+    <h3>Employee Details</h3>
+    <p><strong>ID:</strong> <span id="id"></span></p>
+    <p><strong>Name:</strong> <span id="name"></span></p>
+    <p><strong>Employee ID:</strong> <span id="empId"></span></p>
+    <p><strong>Department:</strong> <span id="dept"></span></p>
+    <p><strong>Reason:</strong> <span id="reason"></span></p>
+  </div>
 
-  <button class="btn btn-print" onclick="printRequest()">Print</button>
+  <!-- MANAGER -->
+  <div id="managerSection" class="card approvalSection">
+    <h3>Manager Approval</h3>
+    <textarea id="managerComment" placeholder="Manager Comment"></textarea>
+    <button onclick="approveStep('Manager')" class="approve">Approve</button>
+    <button onclick="rejectStep('Manager')" class="reject">Reject</button>
+  </div>
+
+  <!-- IT -->
+  <div id="itSection" class="card approvalSection">
+    <h3>IT Clearance</h3>
+    <label>Assets Returned</label>
+    <select id="assetReturn">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <label>ID Blocked</label>
+    <select id="idBlocked">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <textarea id="itComment" placeholder="IT Comment"></textarea>
+    <button onclick="approveStep('IT')" class="approve">Approve</button>
+    <button onclick="rejectStep('IT')" class="reject">Reject</button>
+  </div>
+
+  <!-- FINANCE -->
+  <div id="financeSection" class="card approvalSection">
+    <h3>Finance Clearance</h3>
+    <label>Pending Dues</label>
+    <select id="financeDue">
+      <option value="No Due">No Due</option>
+      <option value="Pending Due">Pending Due</option>
+    </select>
+    <label>Settlement Done</label>
+    <select id="settlementDue">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <textarea id="financeComment" placeholder="Finance Comment"></textarea>
+    <button onclick="approveStep('Finance')" class="approve">Approve</button>
+    <button onclick="rejectStep('Finance')" class="reject">Reject</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="adminSection" class="card approvalSection">
+    <h3>Admin Clearance</h3>
+    <label>ID Returned</label>
+    <select id="idReturned">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <label>ID Blocked</label>
+    <select id="adminIdBlocked">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <textarea id="adminComment" placeholder="Admin Comment"></textarea>
+    <button onclick="approveStep('Admin')" class="approve">Approve</button>
+    <button onclick="rejectStep('Admin')" class="reject">Reject</button>
+  </div>
+
+  <!-- FINAL HR -->
+  <div id="finalHrSection" class="card approvalSection">
+    <h3>Final HR Closure</h3>
+    <label>Exit Interview Done</label>
+    <select id="exitInterview">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <label>Final Settlement Done</label>
+    <select id="finalSettlement">
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <textarea id="hrComment" placeholder="Final HR Comment"></textarea>
+    <button onclick="approveStep('FinalHR')" class="approve">Complete Process</button>
+  </div>
+
+  <br>
+  <a href="dashboard.html">Go To Dashboard</a>
+
 </div>
 
-<script src="view.js"></script>
+<script src="js/approval.js"></script>
+<script src="js/workflow.js"></script>
+
+<script>
+  // ================= AUTH CHECK =================
+  const user = localStorage.getItem("loggedInUser");
+  if (!user) { window.location.href = "login.html"; }
+
+  // ================= GET REQUEST =================
+  const params = new URLSearchParams(window.location.search);
+  const currentRequestId = params.get("id");
+  let requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
+  let request = requests.find(r => r.id === currentRequestId);
+
+  if (!request) { alert("Request not found"); window.location.href = "dashboard.html"; }
+
+  // ================= FILL EXISTING DATA =================
+  document.getElementById("id").innerText = request.id;
+  document.getElementById("name").innerText = request.name;
+  document.getElementById("empId").innerText = request.empId;
+  document.getElementById("dept").innerText = request.department;
+  document.getElementById("reason").innerText = request.reason;
+
+  // Fill comments & status if already approved
+  if (request.managerApproval) {
+    document.getElementById("managerComment").value = request.managerRemarks || "";
+  }
+  if (request.itApproval) {
+    document.getElementById("itComment").value = request.itRemarks || "";
+    document.getElementById("assetReturn").value = request.assetReturn || "Yes";
+    document.getElementById("idBlocked").value = request.idBlocked || "Yes";
+  }
+  if (request.financeApproval) {
+    document.getElementById("financeComment").value = request.financeRemarks || "";
+    document.getElementById("financeDue").value = request.financeDue || "No Due";
+    document.getElementById("settlementDue").value = request.settlementDue || "Yes";
+  }
+  if (request.adminApproval) {
+    document.getElementById("adminComment").value = request.adminRemarks || "";
+    document.getElementById("idReturned").value = request.idReturned || "Yes";
+    document.getElementById("adminIdBlocked").value = request.adminIdBlocked || "Yes";
+  }
+  if (request.finalHrApproval) {
+    document.getElementById("hrComment").value = request.finalHrRemarks || "";
+    document.getElementById("exitInterview").value = request.exitInterview || "Yes";
+    document.getElementById("finalSettlement").value = request.finalSettlement || "Yes";
+  }
+
+  // ================= SHOW CURRENT ROLE SECTION =================
+  // Assuming loggedInUser has role info stored like "Manager", "IT", etc.
+  const role = user; // e.g., "Manager"
+  if(role === "Manager") document.getElementById("managerSection").style.display = "block";
+  if(role === "IT") document.getElementById("itSection").style.display = "block";
+  if(role === "Finance") document.getElementById("financeSection").style.display = "block";
+  if(role === "Admin") document.getElementById("adminSection").style.display = "block";
+  if(role === "FinalHR") document.getElementById("finalHrSection").style.display = "block";
+
+</script>
+
 </body>
 </html>
