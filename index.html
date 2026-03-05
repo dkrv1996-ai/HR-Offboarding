@@ -1,100 +1,93 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Employee Exit Request</title>
+  <title>Employee Exit Management System</title>
   <style>
-    body { font-family: Arial; background: #f4f6f9; padding: 0; margin: 0; }
-    .nav { background: #1f2937; color: white; padding: 15px; font-size: 18px; font-weight: bold; }
-    .container { max-width: 900px; margin: auto; padding: 20px; }
-    input, select, textarea { width: 100%; padding: 8px; margin: 5px 0 10px; }
-    button { padding: 8px 15px; margin-right: 5px; border-radius: 4px; border: none; cursor: pointer; background: #28a745; color: white; }
-    h3 { margin-top: 0; }
+    body { font-family: Arial; margin:0; background:#f4f6f9; }
+    .nav { background:#1f2937; color:white; padding:15px; font-size:18px; font-weight:bold; }
+    .container { padding:20px; max-width:900px; margin:auto; }
+    .card { background:white; padding:20px; margin-top:20px; border-radius:8px; box-shadow:0 3px 10px rgba(0,0,0,0.1);}
+    input, select, textarea { width:100%; padding:8px; margin:5px 0 10px 0;}
+    button { padding:8px 15px; margin-right:5px; border:none; border-radius:4px; cursor:pointer;}
+    .approve { background:#28a745; color:white; }
   </style>
 </head>
 <body>
 <div class="nav">Employee Exit Management System</div>
 <div class="container">
-  <h3>Create Exit Request</h3>
-  <label>Employee Name</label>
-  <input type="text" id="empName" placeholder="Enter employee name">
+  <div class="card">
+    <h3>Create Exit Request</h3>
 
-  <label>Employee ID</label>
-  <input type="text" id="empId" placeholder="Enter employee ID">
+    <label>Employee Name</label>
+    <input type="text" id="empName">
 
-  <label>Department</label>
-  <input type="text" id="empDept" placeholder="Enter department">
+    <label>Employee ID</label>
+    <input type="text" id="empId">
 
-  <label>Manager ID</label>
-  <input type="text" id="managerId" placeholder="Manager ID">
+    <label>Department</label>
+    <input type="text" id="empDept">
 
-  <label>IT Officer ID</label>
-  <input type="text" id="itIdAssign" placeholder="IT Officer ID">
+    <label>Manager ID</label>
+    <input type="text" id="managerId">
 
-  <label>Finance Officer ID</label>
-  <input type="text" id="financeId" placeholder="Finance Officer ID">
+    <label>Finance Officer ID</label>
+    <input type="text" id="financeId">
 
-  <label>Admin Officer ID</label>
-  <input type="text" id="adminIdAssign" placeholder="Admin Officer ID">
+    <label>IT Officer ID</label>
+    <input type="text" id="itIdAssign">
 
-  <label>Reason for Exit</label>
-  <select id="empReason">
-    <option value="">-- Select Reason --</option>
-    <option>Resignation</option>
-    <option>Termination</option>
-    <option>Retirement</option>
-  </select>
+    <label>Admin Officer ID</label>
+    <input type="text" id="adminIdAssign">
 
-  <button onclick="createRequest()">Submit Request</button>
-  <br><br>
-  <a href="dashboard.html">Go to Dashboard</a>
+    <label>Reason for Exit</label>
+    <select id="empReason">
+      <option value="">-- Select Reason --</option>
+      <option>Resignation</option>
+      <option>Termination</option>
+      <option>Retirement</option>
+    </select>
+
+    <button type="button" class="approve" onclick="createRequest()">Submit Request</button>
+  </div>
 </div>
 
 <script>
 function createRequest() {
-  const name = document.getElementById('empName').value.trim();
-  const empId = document.getElementById('empId').value.trim();
-  const dept = document.getElementById('empDept').value.trim();
-  const managerId = document.getElementById('managerId').value.trim();
-  const itId = document.getElementById('itIdAssign').value.trim();
-  const financeId = document.getElementById('financeId').value.trim();
-  const adminId = document.getElementById('adminIdAssign').value.trim();
-  const reason = document.getElementById('empReason').value;
-
-  if (!name || !empId || !dept || !managerId || !itId || !financeId || !adminId || !reason) {
-    alert('Please fill all fields.');
-    return;
-  }
-
+  const id = 'REQ' + Date.now();
   const request = {
-    id: 'REQ' + Date.now(),
-    name,
-    empId,
-    department: dept,
-    reason,
-    managerId,
-    itIdAssign: itId,
-    financeId,
-    adminId,
-    status: 'New',
-    managerApproval: 'Pending',
-    itApproval: 'Pending',
-    financeApproval: 'Pending',
-    adminApproval: 'Pending',
-    finalHrApproval: 'Pending',
-    managerRemarks: '',
-    itRemarks: '',
-    financeRemarks: '',
-    adminRemarks: '',
-    finalHrRemarks: '',
+    id,
+    name: document.getElementById("empName").value,
+    empId: document.getElementById("empId").value,
+    department: document.getElementById("empDept").value,
+    reason: document.getElementById("empReason").value,
+    managerId: document.getElementById("managerId").value,
+    financeId: document.getElementById("financeId").value,
+    itIdAssign: document.getElementById("itIdAssign").value,
+    adminId: document.getElementById("adminIdAssign").value,
+    managerApproval: null,
+    managerRemarks: "",
+    itApproval: null,
+    itRemarks: "",
+    financeApproval: null,
+    financeRemarks: "",
+    adminApproval: null,
+    adminRemarks: "",
+    finalHrApproval: null,
+    finalHrRemarks: "",
+    assetReturn: "",
+    idBlocked: "",
+    settlementDue: "",
+    finalSettlement: "",
+    status: "New",
     history: []
   };
 
-  const requests = JSON.parse(localStorage.getItem('exitRequests') || '[]');
+  const requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
   requests.push(request);
-  localStorage.setItem('exitRequests', JSON.stringify(requests));
+  localStorage.setItem("exitRequests", JSON.stringify(requests));
 
-  alert('Request submitted successfully!');
-  window.location.href = 'dashboard.html';
+  alert("Request Created! Redirecting to Approval Workflow...");
+  window.location.href = "view.html?id=" + id;
 }
 </script>
 </body>
