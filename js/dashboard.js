@@ -80,28 +80,28 @@ function printRequest(id) {
 
   <!-- Manager -->
   <tr><th>Manager Approval</th><td>${request.managerApproval || "-"}</td></tr>
-  <tr><th>Manager Remarks</th><td>${request.managerRemarks || "-"}</td></tr>
+  <tr><th>Manager Remarks</th><td>${request.managerComment || "-"}</td></tr>
 
   <!-- IT -->
   <tr><th>IT Approval</th><td>${request.itApproval || "-"}</td></tr>
-  <tr><th>IT Remarks</th><td>${request.itRemarks || "-"}</td></tr>
+  <tr><th>IT Remarks</th><td>${request.itComment || "-"}</td></tr>
 
   <!-- Finance -->
   <tr><th>Finance Approval</th><td>${request.financeApproval || "-"}</td></tr>
-  <tr><th>Finance Remarks</th><td>${request.financeRemarks || "-"}</td></tr>
+  <tr><th>Finance Remarks</th><td>${request.financeComment || "-"}</td></tr>
   <tr><th>Finance Due Status</th><td>${request.financeDue || "-"}</td></tr>
 
   <!-- Admin -->
   <tr><th>Admin Approval</th><td>${request.adminApproval || "-"}</td></tr>
-  <tr><th>Admin Remarks</th><td>${request.adminRemarks || "-"}</td></tr>
+  <tr><th>Admin Remarks</th><td>${request.adminComment || "-"}</td></tr>
 
   <!-- HR -->
   <tr><th>HR Approval</th><td>${request.hrApproval || "-"}</td></tr>
-  <tr><th>HR Remarks</th><td>${request.hrRemarks || "-"}</td></tr>
+  <tr><th>HR Remarks</th><td>${request.hrComment || "-"}</td></tr>
 
   <!-- Final HR -->
   <tr><th>Final HR Approval</th><td>${request.finalHrApproval || "-"}</td></tr>
-  <tr><th>Final HR Remarks</th><td>${request.finalHrRemarks || "-"}</td></tr>
+  <tr><th>Final HR Remarks</th><td>${request.finalHrComment || "-"}</td></tr>
 
   <!-- Final status -->
   <tr><th>Final Status</th><td>${request.status || "-"}</td></tr>
@@ -166,4 +166,5 @@ function renderDashboard() {
 
 // Initial render
 renderDashboard();
+
 
