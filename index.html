@@ -123,12 +123,12 @@
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
-<textarea id="FinanceRemarks" placeholder="Finance Comment"></textarea>
+<textarea id="financeComment" placeholder="Finance Comment"></textarea>
     <button onclick="approveStep('Finance')" class="approve">Approve</button>
     <button onclick="rejectStep('Finance')" class="reject">Reject</button>
   </div>
 
-  <!-- IT -->
+        <!-- IT -->
   <div id="itSection" class="card approvalSection">
     <h3>IT Clearance</h3>
 <label>Assets Returned</label>
@@ -136,18 +136,14 @@
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
-
 <label>ID Blocked</label>
 <select id="IdBlocked">
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
-
-<textarea id="ITRemarks" placeholder="IT Comment"></textarea>
+<textarea id="itComment" placeholder="IT Comment"></textarea>
 <button onclick="approveStep('Finance')" class="approve">Approve</button>
     <button onclick="rejectStep('Finance')" class="reject">Reject</button>
-
-   
   </div>
 
   <!-- ADMIN -->
@@ -158,13 +154,12 @@
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
-
 <label>ID Blocked</label>
 <select id="IdBlocked">
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
-    <textarea id="AdminRemarks" placeholder="Admin Comment"></textarea>
+    <textarea id="aadminComment" placeholder="Admin Comment"></textarea>
     <button onclick="approveStep('Admin')" class="approve">Approve</button>
     <button onclick="rejectStep('Admin')" class="reject">Reject</button>
   </div>
@@ -173,18 +168,17 @@
   <div id="finalHrSection" class="card approvalSection">
     <h3>Final HR Closure</h3>
 <label>Exit Interview</label>
-<select id="exitinterview">
-  <option value="No Due">No</option>
-  <option value="Pending Due">Done</option>
+<select id="exit interview">
+  <option value="Yes">Yes</option>
+  <option value="No ">No</option>
 </select>
-
 <label>Final Settlement Done</label>
-<select id="financeSettlement">
+<select id="finance Settlement">
   <option value="Yes">Yes</option>
   <option value="No">No</option>
 </select>
 
-    <textarea id="FinalRemarks" placeholder="Final HR Comment"></textarea>
+    <textarea id="hrComment" placeholder="Final HR Comment"></textarea>
     <button onclick="approveStep('FinalHR')" class="approve">Complete Process</button>
   </div>
 
@@ -199,6 +193,7 @@
 
 </body>
 </html>
+
 
 
 
