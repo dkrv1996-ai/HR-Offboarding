@@ -1,112 +1,131 @@
+// ================= GLOBALS =================
+const currentRequestId = new URLSearchParams(window.location.search).get("id");
+let requests = JSON.parse(localStorage.getItem("exitRequests") || "[]");
+let request = requests.find(r => r.id === currentRequestId);
+
+// ================= AUTH CHECK =================
+const user = localStorage.getItem("loggedInUser");
+if (!user) { window.location.href = "login.html"; }
+
+if (!request) {
+    alert("Request not found");
+    window.location.href = "dashboard.html";
+}
+
 // ================= APPROVE STEP =================
 function approveStep(role) {
-  if (!currentRequestId) return;
+    if (!request) return;
 
-  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
-  let request = requests.find(r => r.id === currentRequestId);
-  if (!request) return;
+    let comment = "";
 
-  // Get remark from the corresponding textarea
-  let commentBox = document.getElementById(role.toLowerCase() + "Remarks");
-  let commentText = commentBox ? commentBox.value.trim() : "";
+    switch(role) {
+        case "Manager":
+            comment = document.getElementById("managerComment").value.trim();
+            if(!comment){ alert("Enter Manager remark"); return; }
+            request.managerRemarks = comment;
+            request.managerApproval = "Approved";
+            break;
 
-  if (!commentText) {
-    alert("Please enter remark before approving.");
-    return;
-  }
+        case "IT":
+            comment = document.getElementById("itComment").value.trim();
+            request.itRemarks = comment;
+            request.itApproval = "Approved";
+            request.assetReturn = document.getElementById("assetReturn").value;
+            request.idBlocked = document.getElementById("idBlocked").value;
+            break;
 
-  // Finance validation for dues
-  if (role === "Finance") {
-    let financeDue = document.getElementById("financeDue");
-    if (financeDue && financeDue.value === "Pending Due") {
-      alert("Cannot proceed. Pending dues exist.");
-      return;
+        case "Finance":
+            comment = document.getElementById("financeComment").value.trim();
+            request.financeRemarks = comment;
+            request.financeApproval = "Approved";
+            request.financeDue = document.getElementById("financeDue").value;
+            request.settlementDue = document.getElementById("settlementDue").value;
+            break;
+
+        case "Admin":
+            comment = document.getElementById("adminComment").value.trim();
+            request.adminRemarks = comment;
+            request.adminApproval = "Approved";
+            request.idReturned = document.getElementById("idReturned").value;
+            request.adminIdBlocked = document.getElementById("adminIdBlocked").value;
+            break;
+
+        case "FinalHR":
+            comment = document.getElementById("hrComment").value.trim();
+            request.finalHrRemarks = comment;
+            request.finalHrApproval = "Approved";
+            request.exitInterview = document.getElementById("exitInterview").value;
+            request.finalSettlement = document.getElementById("finalSettlement").value;
+            request.status = "Completed"; // Final step
+            break;
+
+        default:
+            alert("Unknown role: " + role);
+            return;
     }
-  }
 
-  // Save approval in request
-  switch(role) {
-    case "Manager":
-      request.managerApproval = "Approved";
-      request.managerRemarks = commentText;
-      break;
-    case "IT":
-      request.itApproval = "Approved";
-      request.itRemarks = commentText;
-      break;
-    case "Finance":
-      request.financeApproval = "Approved";
-      request.financeRemarks = commentText;
-      break;
-    case "Admin":
-      request.adminApproval = "Approved";
-      request.adminRemarks = commentText;
-      break;
-    case "Final HR":
-      request.finalHrApproval = "Approved";
-      request.finalHrRemarks = commentText;
-      break;
-  }
+    // ================= SAVE HISTORY =================
+    request.history = request.history || [];
+    request.history.push({
+        by: role,
+        action: "Approved",
+        notes: comment,
+        at: new Date().toISOString()
+    });
 
-  // Save approval history
-  request.history.push({
-    role: role,
-    action: "Approved",
-    comment: commentText,
-    date: new Date().toISOString()
-  });
-
-  localStorage.setItem("exitRequests", JSON.stringify(requests));
-  alert(role + " approved successfully");
-
-  nextStep && nextStep(); // optional, only if nextStep() exists
+    localStorage.setItem("exitRequests", JSON.stringify(requests));
+    alert(role + " Approved Successfully");
+    nextStep && nextStep();
 }
 
 // ================= REJECT STEP =================
 function rejectStep(role) {
-  if (!currentRequestId) return;
+    if (!request) return;
 
-  let requests = JSON.parse(localStorage.getItem("exitRequests")) || [];
-  let request = requests.find(r => r.id === currentRequestId);
-  if (!request) return;
+    let comment = "";
 
-  let commentBox = document.getElementById(role.toLowerCase() + "Remarks");
-  let commentText = commentBox ? commentBox.value.trim() : "";
+    switch(role) {
+        case "Manager":
+            comment = document.getElementById("managerComment").value.trim();
+            request.managerApproval = "Rejected";
+            break;
+        case "IT":
+            comment = document.getElementById("itComment").value.trim();
+            request.itApproval = "Rejected";
+            break;
+        case "Finance":
+            comment = document.getElementById("financeComment").value.trim();
+            request.financeApproval = "Rejected";
+            break;
+        case "Admin":
+            comment = document.getElementById("adminComment").value.trim();
+            request.adminApproval = "Rejected";
+            break;
+        case "FinalHR":
+            comment = document.getElementById("hrComment").value.trim();
+            request.finalHrApproval = "Rejected";
+            request.status = "Rejected";
+            break;
+        default:
+            alert("Unknown role: " + role);
+            return;
+    }
 
-  // Save rejection in request
-  switch(role) {
-    case "Manager":
-      request.managerApproval = "Rejected";
-      request.managerRemarks = commentText;
-      break;
-    case "IT":
-      request.itApproval = "Rejected";
-      request.itRemarks = commentText;
-      break;
-    case "Finance":
-      request.financeApproval = "Rejected";
-      request.financeRemarks = commentText;
-      break;
-    case "Admin":
-      request.adminApproval = "Rejected";
-      request.adminRemarks = commentText;
-      break;
-    case "Final HR":
-      request.finalHrApproval = "Rejected";
-      request.finalHrRemarks = commentText;
-      break;
-  }
+    request.history = request.history || [];
+    request.history.push({
+        by: role,
+        action: "Rejected",
+        notes: comment,
+        at: new Date().toISOString()
+    });
 
-  // Save rejection history
-  request.history.push({
-    role: role,
-    action: "Rejected",
-    comment: commentText,
-    date: new Date().toISOString()
-  });
+    localStorage.setItem("exitRequests", JSON.stringify(requests));
+    alert(role + " Rejected Successfully");
+    rejectProcess && rejectProcess(role);
+}
 
-  localStorage.setItem("exitRequests", JSON.stringify(requests));
-  alert(role + " rejected successfully");
-
-  rejectProcess && rejectProcess(role); // optional
+// ================= LOGOUT =================
+function logout() {
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "login.html";
 }
